@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>The Oceanic Controller</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css-frames-style.css') }}" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
     <script type="text/javascript" charset="utf-8">
@@ -27,16 +28,14 @@
             socket.on('update value', function(msg) {
                 $('input#'+msg.who).val(msg.data)
             });
-            socket.on('reload page', function(msg) {
-                location.reload;
-            });
             $('form#reset').submit(function(event) {
                 socket.emit('reset request');
+                window.location.reload();
                 return false;
             });
             $('form#webcam').submit(function(event) {
                 socket.emit('webcam request');
-                location.reload();
+                window.location.reload();
                 return false;
             });
 
@@ -44,21 +43,41 @@
     </script>
 </head>
 <body>
-    <h2>Rudder</h2>
-            <input id="rudder" name="rudder" type="range" class="sync" min="48" max="132" value="{{rudder}}" /> <br>
-    <h2>Camera</h2>
-            <input id="camera" name="camera" type="range" class="sync" min="0" max="180" value="{{camera}}" /> <br>
-    <h2>Motor</h2>
-            <input id="motor" name="motor" type="range" class="sync" min="-255" max="255" value="{{motor}}" /> <br>
-    <h2>Light</h2>
-            <input id="light" name="light" type="range" class="sync" min="0" max="255" value="{{light}}" /> <br>
-    <form id="reset" method="POST" action="#">
-        <input type="submit" value="Reset motors/servos">
-    </form>
-        <form id="webcam" method="POST" action="#">
-        <input type="submit" value="Restart webcam server">
-    </form>
-    <iframe id="camstream" style="border:none" width="640" height="480"></iframe>
-    <div id="log"></div>
+        <div id="header-wrapper">
+            <div id="header">
+            Camera<br>
+            <input id="camera" style="width: 640px;" name="camera" type="range" class="sync" min="0" max="180" value="{{camera}}" />
+            <br>Rudder<br>
+            <input id="rudder" style="width: 640px;" name="rudder" type="range" class="sync" min="48" max="132" value="{{rudder}}" />
+            </div>
+        </div>
+        <div id="leftbar-wrapper">
+            <div id ="leftbar">
+            Motor<br>
+            <input id="motor" orient="vertical" style="width: 40px; height: 550px; -webkit-appearance: slider-vertical;" name="motor" type="range" class="sync" min="-255" max="255" value="{{motor}}" />
+            </div>
+        </div>
+        <div id="rightbar-wrapper">
+            <div id ="rightbar">
+            Light<br>
+            <input id="light" orient="vertical" style="width: 40px; height: 550px; -webkit-appearance: slider-vertical;" name="light" type="range" class="sync" min="0" max="255" value="{{light}}" />
+            </div>
+        </div>
+        <div id="content-wrapper">
+            <div id="content">
+            <iframe id="camstream" style="border:none" width="640" height="480"></iframe>
+            <form id="reset" method="POST" action="#">
+                <input type="submit" value="Reset motors/servos">
+            </form>
+            <form id="webcam" method="POST" action="#">
+                <input type="submit" value="Restart webcam server">
+            </form>
+            </div>
+        </div>
+        <div id="footer-wrapper">
+            <div id="footer">
+            <div id="log"></div>
+            </div>
+        </div>
 </body>
 </html>

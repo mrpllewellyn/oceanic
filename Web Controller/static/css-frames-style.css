@@ -25,7 +25,8 @@ div#leftbar {
 div#rightbar-wrapper {
     position:fixed;
     margin-top: 100px;
-    width:100px;
+    width:40px;
+    margin-left: 40px;
     top:0;
     left:10px;
     margin-top:0;
@@ -33,7 +34,6 @@ div#rightbar-wrapper {
 }
 div#rightbar {
     height:100%;
-    width:20%;
     margin:0 auto;
 }
 div#content-wrapper {

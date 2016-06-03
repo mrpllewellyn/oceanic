@@ -44,11 +44,10 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 
-#ser = serial.Serial('/dev/ttyACM0', 9600)
+ser = serial.Serial('/dev/ttyACM0', 9600)
 os.system("killall mjpg_streamer")
 os.system("mjpg_streamer -i 'input_testpicture.so' -o 'output_http.so -w /srv/http/mjpg' &")
-#time.sleep(2)
-print('Hello')
+time.sleep(2)
 
 something_changed = 0
 
@@ -76,8 +75,7 @@ def background_thread():
         time.sleep(0.05)
         count += 1
         if something_changed == 1:
-            #sendSerial()
-            print('Hi')
+            sendSerial()
             something_changed = 0
 
 

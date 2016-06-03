@@ -46,7 +46,7 @@ thread = None
 
 ser = serial.Serial('/dev/ttyACM0', 9600)
 os.system("killall mjpg_streamer")
-os.system("mjpg_streamer -i 'input_testpicture.so' -o 'output_http.so -w /srv/http/mjpg' &")
+os.system("mjpg_streamer -i 'input_uvc.so' -o 'output_http.so -w /srv/http/wwwwebcam' &")
 time.sleep(2)
 
 something_changed = 0
@@ -113,7 +113,7 @@ def test_disconnect():
 @socketio.on('webcam request', namespace='/oceanic')
 def webcam_server():
     os.system("killall mjpg_streamer")
-    os.system("mjpg_streamer -i 'input_testpicture.so' -o 'output_http.so -w /srv/http/mjpg' &")
+    os.system("mjpg_streamer -i 'input_uvc.so' -o 'output_http.so -w /srv/http/wwwwebcam' &")
 
 @socketio.on('reset request', namespace='/oceanic')
 def reset_all():

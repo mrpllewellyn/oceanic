@@ -10,12 +10,15 @@
             // the socket.io documentation recommends sending an explicit package upon connection
             // this is specially important when using the global namespace
             var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+            var cameraframe = ('http://' + document.domain + ':8080/?action=stream');
+            var iframe = document.getElementById('camstream');
+            iframe.src = cameraframe;
             socket.on('my response', function(msg) {
                 $('#log').append('<br>' + $('<div/>').text('# ' + msg.data).html());
             });
             // event handler for new connections
             socket.on('connect', function() {
-                socket.emit('my event', {data: 'Client connected'});
+                socket.emit('my event', {data: 'Web client connected'});
             });
             $('input.sync').on('input', function(event) {
                 socket.emit('values changed', {who: $(this).attr('id'), data: $(this).val()});
@@ -24,10 +27,19 @@
             socket.on('update value', function(msg) {
                 $('input#'+msg.who).val(msg.data)
             });
+            socket.on('reload page', function(msg) {
+                location.reload;
+            });
             $('form#reset').submit(function(event) {
                 socket.emit('reset request');
                 return false;
             });
+            $('form#webcam').submit(function(event) {
+                socket.emit('webcam request');
+                location.reload();
+                return false;
+            });
+
         });
     </script>
 </head>
@@ -41,8 +53,12 @@
     <h2>Light</h2>
             <input id="light" name="light" type="range" class="sync" min="0" max="255" value="{{light}}" /> <br>
     <form id="reset" method="POST" action="#">
-        <input type="submit" value="Reset">
+        <input type="submit" value="Reset motors/servos">
     </form>
+        <form id="webcam" method="POST" action="#">
+        <input type="submit" value="Restart webcam server">
+    </form>
+    <iframe id="camstream" style="border:none" width="640" height="480"></iframe>
     <div id="log"></div>
 </body>
 </html>

@@ -44,8 +44,13 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 
-ser = serial.Serial('/dev/ttyACM0', 9600)
-time.sleep(2)
+#ser = serial.Serial('/dev/ttyACM0', 9600)
+os.system("killall mjpg_streamer")
+os.system("mjpg_streamer -i 'input_testpicture.so' -o 'output_http.so -w /srv/http/mjpg' &")
+#time.sleep(2)
+print('Hello')
+
+something_changed = 0
 
 values = {
     'rudder': 95,
@@ -65,11 +70,15 @@ def sendSerial():
     ser.write(b'M1%dt99999\n' % int(values['light']))
 
 def background_thread():
+    global something_changed
     count = 0
     while True:
-        time.sleep(0.1)
+        time.sleep(0.05)
         count += 1
-        sendSerial()
+        if something_changed == 1:
+            #sendSerial()
+            print('Hi')
+            something_changed = 0
 
 
 
@@ -92,8 +101,10 @@ def message(message):
 
 @socketio.on('values changed', namespace='/oceanic')
 def values_changed(message):
+    global something_changed
     values[message['who']] = message['data']
     emit('update value', message, broadcast=True)
+    something_changed = 1
 
 @socketio.on('connect', namespace='/oceanic')
 def test_connect():
@@ -104,9 +115,17 @@ def test_connect():
 def test_disconnect():
     print('Client disconnected', request.sid)
 
+@socketio.on('webcam request', namespace='/oceanic')
+def webcam_server():
+    os.system("killall mjpg_streamer")
+    os.system("mjpg_streamer -i 'input_testpicture.so' -o 'output_http.so -w /srv/http/mjpg' &")
+    time.sleep(.5)
+    emit('reload page', message, broadcast=True)
+
 @socketio.on('reset request', namespace='/oceanic')
 def reset_all():
     global values
+    global something_changed
     values = {
         'rudder': 95,
         'camera': 59,
@@ -116,6 +135,7 @@ def reset_all():
         'resvertical': 480,
         'fps': 5,
     }
+    something_changed = 1
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0')

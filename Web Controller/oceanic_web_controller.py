@@ -56,9 +56,6 @@ values = {
     'camera': 59,
     'motor': 0,
     'light': 0,
-    'reshorizontal': 640,
-    'resvertical': 480,
-    'fps': 5,
 }
 
 def sendSerial():
@@ -129,9 +126,6 @@ def reset_all():
         'camera': 59,
         'motor': 0,
         'light': 0,
-        'reshorizontal': 640,
-        'resvertical': 480,
-        'fps': 5,
     }
     something_changed = 1
 

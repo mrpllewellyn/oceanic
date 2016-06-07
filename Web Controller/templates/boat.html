@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+    <meta name="mobile-web-app-capable" content="yes">
     <title>The Oceanic Controller</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css-frames-style.css') }}" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
     <script type="text/javascript" charset="utf-8">
@@ -12,11 +12,16 @@
             // this is specially important when using the global namespace
             var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
             var cameraframe = ('http://' + document.domain + ':8080/?action=stream');
-            var iframe = document.getElementById('camstream');
-            iframe.src = cameraframe;
             socket.on('my response', function(msg) {
                 $('#log').append('<br>' + $('<div/>').text('# ' + msg.data).html());
             });
+            function addStyleString(str) {
+                var node = document.createElement('style');
+                node.innerHTML = str;
+                document.body.appendChild(node);
+            }
+            addStyleString('html {  background: url(' + cameraframe +') no-repeat;  -webkit-background-size: cover;  -moz-background-size: cover;  -o-background-size: cover;  background-size: cover;}');
+
             // event handler for new connections
             socket.on('connect', function() {
                 socket.emit('my event', {data: 'Web client connected'});
@@ -41,41 +46,38 @@
 
         });
     </script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css-frames-style.css') }}" />
+
 </head>
 <body>
         <div id="header-wrapper">
             <div id="header">
             Camera<br>
-            <input id="camera" style="width: 640px;" name="camera" type="range" class="sync" min="0" max="180" value="{{camera}}" />
+            <input id="camera" style="width: 95%;" name="camera" type="range" class="sync" min="0" max="180" value="{{camera}}" />
             <br>Rudder<br>
-            <input id="rudder" style="width: 640px;" name="rudder" type="range" class="sync" min="48" max="132" value="{{rudder}}" />
+            <input id="rudder" style="width: 95%;" name="rudder" type="range" class="sync" min="48" max="132" value="{{rudder}}" />
             </div>
         </div>
         <div id="leftbar-wrapper">
             <div id ="leftbar">
             Motor<br>
-            <input id="motor" orient="vertical" style="width: 40px; height: 550px; -webkit-appearance: slider-vertical;" name="motor" type="range" class="sync" min="-255" max="255" value="{{motor}}" />
+            <input id="motor" orient="vertical" style="width: 40px; height: 95%; -webkit-appearance: slider-vertical;" name="motor" type="range" class="sync" min="-255" max="255" value="{{motor}}" />
             </div>
         </div>
         <div id="rightbar-wrapper">
             <div id ="rightbar">
             Light<br>
-            <input id="light" orient="vertical" style="width: 40px; height: 550px; -webkit-appearance: slider-vertical;" name="light" type="range" class="sync" min="0" max="255" value="{{light}}" />
+            <input id="light" orient="vertical" style="width: 40px; height: 95%; -webkit-appearance: slider-vertical;" name="light" type="range" class="sync" min="0" max="255" value="{{light}}" />
             </div>
         </div>
-        <div id="content-wrapper">
-            <div id="content">
-            <iframe id="camstream" style="border:none" width="640" height="480"></iframe>
-            <form id="reset" method="POST" action="#">
+        <div id="footer-wrapper">
+            <div id="footer">
+                        <form id="reset" method="POST" action="#">
                 <input type="submit" value="Reset motors/servos">
             </form>
             <form id="webcam" method="POST" action="#">
                 <input type="submit" value="Restart webcam server">
             </form>
-            </div>
-        </div>
-        <div id="footer-wrapper">
-            <div id="footer">
             <div id="log"></div>
             </div>
         </div>

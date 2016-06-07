@@ -1,13 +1,16 @@
+
 div#header-wrapper {
     position:fixed;
+    margin:0 auto;
+    height:50px;
     top:0;
-    left:0;
+    right:0;
+    width:100%;
 }
 
 div#header {
+    height:50px;
     margin-left:100px;
-
-
 }
 
 div#leftbar-wrapper {
@@ -36,25 +39,14 @@ div#rightbar {
     height:100%;
     margin:0 auto;
 }
-div#content-wrapper {
-    padding:6em 0 0 0;
-    margin-left:0;
-    voice-family: "\"}\"";
-    voice-family:inherit;
-    margin-left:0px;
-    padding-bottom:0px;
-}
 
 
-div#content {
-    margin-left:100px;
-    top:0;
-}
-
-div#footerwrap {
+div#footer-wrapper {
     position:fixed;
     margin:0 auto;
     height:50px;
+    bottom:0;
+    right:0;
 }
 
 div#footer {

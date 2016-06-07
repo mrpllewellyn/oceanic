@@ -52,7 +52,7 @@ os.system("killall mjpg_streamer")
 something_changed = 0
 
 values = {
-    'rudder': 95,
+    'rudder': 100,
     'camera': 59,
     'motor': 0,
     'light': 0,

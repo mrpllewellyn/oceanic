@@ -14,9 +14,9 @@ const int default_timeout = 1000; // fallback timeout if not specified, in ms
 
 // Rudder servo
 int servo_0_pos = 0; //define variable used for setting servo position
-const int servo_0_home = 95; // sets the default centre/"home" position for the servo
-const int servo_0_softmin = 46; // sets the minimum position that the rudder can turn to, in degrees
-const int servo_0_softmax = 136; // sets the maximum position that the rudder can turn to, in degrees
+const int servo_0_home = 100; // sets the default centre/"home" position for the servo
+const int servo_0_softmin = 42; // sets the minimum position that the rudder can turn to, in degrees
+const int servo_0_softmax = 142; // sets the maximum position that the rudder can turn to, in degrees
 const String servo_0_name = "rudder";
 const String servo_0_desc = "Servo controlled rudder";
 int servo_0_timeout = 1000; //sets initial timeout in ms for servo_0

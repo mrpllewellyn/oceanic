@@ -121,7 +121,7 @@ def reset_all():
     global something_changed
     values = {
         'rudder': 95,
-        'camera': 59,
+        'camera': 100,
         'motor': 0,
         'light': 0,
     }

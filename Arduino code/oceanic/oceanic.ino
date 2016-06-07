@@ -25,7 +25,7 @@ boolean servo_0_active = false; //let's us know if a command is being run on ser
 
 // Camera servo
 int servo_1_pos = 0; //define variable used for setting servo position
-const int servo_1_home = 59; // sets the default centre/"home" position for the servo
+const int servo_1_home = 90; // sets the default centre/"home" position for the servo
 const int servo_1_softmin = 0; // sets the minimum position that the camera can turn to, in degrees
 const int servo_1_softmax = 180; // sets the maximum position that the camera can turn to, in degrees
 const String servo_1_name = "camera";

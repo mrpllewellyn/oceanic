@@ -53,7 +53,7 @@ something_changed = 0
 
 values = {
     'rudder': 100,
-    'camera': 59,
+    'camera': 90,
     'motor': 0,
     'light': 0,
 }

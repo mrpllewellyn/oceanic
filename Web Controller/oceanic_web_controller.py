@@ -113,7 +113,7 @@ def test_disconnect():
 @socketio.on('webcam request', namespace='/oceanic')
 def webcam_server():
     os.system("killall mjpg_streamer")
-os.system("mjpg_streamer -i 'input_uvc.so -r 1280x720' -o 'output_http.so -w /srv/http/wwwwebcam' &")
+    os.system("mjpg_streamer -i 'input_uvc.so -r 1280x720' -o 'output_http.so -w /srv/http/wwwwebcam' &")
 
 @socketio.on('reset request', namespace='/oceanic')
 def reset_all():

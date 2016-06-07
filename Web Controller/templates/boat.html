@@ -12,16 +12,21 @@
             // this is specially important when using the global namespace
             var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
             var cameraframe = ('http://' + document.domain + ':8080/?action=stream');
-            socket.on('my response', function(msg) {
-                $('#log').append('<br>' + $('<div/>').text('# ' + msg.data).html());
-            });
+
             function addStyleString(str) {
                 var node = document.createElement('style');
                 node.innerHTML = str;
                 document.body.appendChild(node);
             }
+            function download(file)
+            {
+                window.location=file;
+            }
             addStyleString('html {  background: url(' + cameraframe +') no-repeat;  -webkit-background-size: cover;  -moz-background-size: cover;  -o-background-size: cover;  background-size: cover;}');
 
+            socket.on('my response', function(msg) {
+                $('#log').append('<br>' + $('<div/>').text('# ' + msg.data).html());
+            });
             // event handler for new connections
             socket.on('connect', function() {
                 socket.emit('my event', {data: 'Web client connected'});
@@ -75,6 +80,7 @@
                         <form id="reset" method="POST" action="#">
                 <input type="submit" value="Reset motors/servos">
             </form>
+            <input type="button" value="Download" onClick="download(cameraframe)" >
             <form id="webcam" method="POST" action="#">
                 <input type="submit" value="Restart webcam server">
             </form>

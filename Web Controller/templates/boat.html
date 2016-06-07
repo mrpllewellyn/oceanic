@@ -18,10 +18,7 @@
                 node.innerHTML = str;
                 document.body.appendChild(node);
             }
-            function download(file)
-            {
-                window.location=file;
-            }
+
             addStyleString('html {  background: url(' + cameraframe +') no-repeat;  -webkit-background-size: cover;  -moz-background-size: cover;  -o-background-size: cover;  background-size: cover;}');
 
             socket.on('my response', function(msg) {
@@ -80,7 +77,6 @@
                         <form id="reset" method="POST" action="#">
                 <input type="submit" value="Reset motors/servos">
             </form>
-            <input type="button" value="Download" onClick="download(cameraframe)" >
             <form id="webcam" method="POST" action="#">
                 <input type="submit" value="Restart webcam server">
             </form>

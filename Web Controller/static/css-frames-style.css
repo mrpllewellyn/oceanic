@@ -44,7 +44,7 @@ div#rightbar {
 div#footer-wrapper {
     position:fixed;
     margin:0 auto;
-    height:50px;
+    height:100px;
     bottom:0;
     right:0;
 }

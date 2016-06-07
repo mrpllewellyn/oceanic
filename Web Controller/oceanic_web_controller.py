@@ -72,7 +72,7 @@ def background_thread():
         time.sleep(0.05)
         count += 1
         if something_changed == 1:
-            #sendSerial()
+            sendSerial()
             something_changed = 0
 
 

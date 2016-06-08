@@ -3,7 +3,7 @@ div#header-wrapper {
     position:fixed;
     margin:0 auto;
     height:50px;
-    top:0;
+    bottom:0;
     right:0;
     width:100%;
 }
@@ -45,7 +45,7 @@ div#footer-wrapper {
     position:fixed;
     margin:0 auto;
     height:100px;
-    bottom:0;
+    top:0;
     right:0;
 }
 

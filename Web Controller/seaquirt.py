@@ -116,10 +116,11 @@ def test_connect():
 def test_disconnect():
     print('Client disconnected', request.sid)
 
-@socketio.on('webcam request', namespace='/seasquirt')
-def webcam_server():
+##@socketio.on('webcam request', namespace='/seasquirt')
+##def webcam_server():
     ##os.system("killall mjpg_streamer")
     ##os.system("mjpg_streamer -i 'input_uvc.so -r 1280x720 -f 5' -o 'output_http.so -w /srv/http/wwwwebcam' &")
+    
 
 @socketio.on('reset request', namespace='/seasquirt')
 def reset_all():

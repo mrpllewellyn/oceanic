@@ -1,4 +1,4 @@
-// Arduino code to control 4 servos and two DC motors
+// Arduino code to control 6 servos and 1 DC motor
 // Receives commands over serial
 
 #include <Servo.h>
@@ -88,10 +88,6 @@ int motor_0_speed = 0;
 int motor_0_timeout = 1000; // sets initial timeout in ms for motor_0
 unsigned long motor_0_tsl;
 boolean motor_0_active = false; //let's us know if a command is being run on motor_0
-int motor_1_timeout = 1000; // sets initial timeout in ms for motor_1
-unsigned long motor_1_tsl;
-boolean motor_1_active = false; //let's us know if a command is being run on motor_1
-
 
 //Serial input
 String serial_input = "";
@@ -129,6 +125,8 @@ void setup() {
   servo_0.write(servo_0_home);
   servo_2.write(servo_2_home);
   servo_3.write(servo_3_home);
+  servo_4.write(servo_4_home);
+  servo_5.write(servo_5_home);
 
   //Init serial connection
   Serial.begin(9600);
@@ -407,7 +405,7 @@ void servo_5_set() { // sets the servo to position
 void check_timeouts() {
     // monitor timeouts and reset motors/servos accordingly
   
-  //servo 1
+  //servo 0
   if (servo_0_active){
     if (millis() - servo_0_tsl >= servo_0_timeout){  
       servo_0.write(servo_0_home);
@@ -415,7 +413,7 @@ void check_timeouts() {
     }
   }
 
-  //servo 2
+  //servo 1
   if (servo_1_active){
     if (millis() - servo_1_tsl >= servo_1_timeout){  
       servo_1.write(servo_1_home);
@@ -423,7 +421,7 @@ void check_timeouts() {
     }
   }
 
-  //servo 3
+  //servo 2
   if (servo_2_active){
     if (millis() - servo_2_tsl >= servo_2_timeout){  
       servo_2.write(servo_2_home);
@@ -431,14 +429,14 @@ void check_timeouts() {
     }
   }
 
-  //servo 4
+  //servo 3
   if (servo_3_active){
     if (millis() - servo_3_tsl >= servo_3_timeout){  
       servo_3.write(servo_3_home);
       servo_3_active = false;
     }
   }
-  //servo 5
+  //servo 4
   if (servo_4_active){
     if (millis() - servo_4_tsl >= servo_4_timeout){  
       servo_4.write(servo_4_home);
@@ -446,7 +444,7 @@ void check_timeouts() {
     }
   }
 
-  //servo 6
+  //servo 5
   if (servo_5_active){
     if (millis() - servo_5_tsl >= servo_5_timeout){  
       servo_1.write(servo_5_home);

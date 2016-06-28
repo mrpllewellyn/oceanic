@@ -1,7 +1,7 @@
 import serial
 import sys, tty, termios, time, os
 
-ser = serial.Serial('/dev/ttyACM0', 9600)
+ser = serial.Serial('/dev/ttyUSB0', 9600)
 time.sleep(2)
 
 # The getch method can determine which key has been pressed

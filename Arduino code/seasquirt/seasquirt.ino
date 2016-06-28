@@ -1,54 +1,74 @@
-// Arduino code for Atmega 2560 with a LinkSprite Motor Shield
-// Code to control motors and servos on a modified RC boat
-// Receives commands over serial and sets the motor speed/direction and servo positions
-
+// Arduino code to control 4 servos and two DC motors
+// Receives commands over serial
 
 #include <Servo.h>
 
 // generate servo objects
-Servo servo_0,servo_1;
+Servo servo_0,servo_1,servo_2,servo_3,servo_4,servo_5;
 
 // Let's define some stuff!..
 
 const int default_timeout = 1000; // fallback timeout if not specified, in ms
 
-// Rudder servo
+//  servo 0
 int servo_0_pos = 0; //define variable used for setting servo position
-const int servo_0_home = 100; // sets the default centre/"home" position for the servo
-const int servo_0_softmin = 42; // sets the minimum position that the rudder can turn to, in degrees
-const int servo_0_softmax = 142; // sets the maximum position that the rudder can turn to, in degrees
-const String servo_0_name = "rudder";
-const String servo_0_desc = "Servo controlled rudder";
+const int servo_0_home = 90; // sets the default centre/"home" position for the servo
+const int servo_0_softmin = 0; // sets the minimum position that the rudder can turn to, in degrees
+const int servo_0_softmax = 180; // sets the maximum position that the rudder can turn to, in degrees
+const String servo_0_name = "servo0";
+const String servo_0_desc = "Servo 0";
 int servo_0_timeout = 1000; //sets initial timeout in ms for servo_0
 unsigned long servo_0_tsl;
 boolean servo_0_active = false; //let's us know if a command is being run on servo_0
 
-// Camera servo
+//  servo 1
 int servo_1_pos = 0; //define variable used for setting servo position
 const int servo_1_home = 90; // sets the default centre/"home" position for the servo
 const int servo_1_softmin = 0; // sets the minimum position that the camera can turn to, in degrees
 const int servo_1_softmax = 180; // sets the maximum position that the camera can turn to, in degrees
-const String servo_1_name = "camera";
-const String servo_1_desc = "Servo to control camera on horizontal plane";
+const String servo_1_name = "servo1";
+const String servo_1_desc = "Servo 1";
 int servo_1_timeout = 1000; //sets initial timeout in ms for servo_1
 unsigned long servo_1_tsl;
 boolean servo_1_active = false; //let's us know if a command is being run on servo_1
 
-// Define stuff for motor controller
-// channel A - connect to DC motor driving boat prop
-const String motor_0_name = "prop";
-const String motor_0_desc = "12V DC Motor coupled to prop shaft";
-int motor_0_direction_pin1 = 8;
-int motor_0_direction_pin2 = 11;
-int motor_0_speed_pin = 9;
+//  servo 2
+int servo_2_pos = 0; //define variable used for setting servo position
+const int servo_2_home = 90; // sets the default centre/"home" position for the servo
+const int servo_2_softmin = 0; // sets the minimum position that the rudder can turn to, in degrees
+const int servo_2_softmax = 180; // sets the maximum position that the rudder can turn to, in degrees
+const String servo_2_name = "servo2";
+const String servo_2_desc = "Servo 2";
+int servo_2_timeout = 1000; //sets initial timeout in ms for servo_2
+unsigned long servo_2_tsl;
+boolean servo_2_active = false; //let's us know if a command is being run on servo_2
+
+//  servo 3
+int servo_3_pos = 0; //define variable used for setting servo position
+const int servo_3_home = 90; // sets the default centre/"home" position for the servo
+const int servo_3_softmin = 0; // sets the minimum position that the camera can turn to, in degrees
+const int servo_3_softmax = 180; // sets the maximum position that the camera can turn to, in degrees
+const String servo_3_name = "servo3";
+const String servo_3_desc = "Servo 3";
+int servo_3_timeout = 1000; //sets initial timeout in ms for servo_3
+unsigned long servo_3_tsl;
+boolean servo_3_active = false; //let's us know if a command is being run on servo_3
+
+
+// motor 0
+const String motor_0_name = "motor0";
+const String motor_0_desc = "Motor 0";
+int motor_0_direction_pin1 = 2;
+int motor_0_direction_pin2 = 4;
+int motor_0_speed_pin = 3;
 int motor_0_speed = 0;
 
-//channel B - no motor connected
-const String motor_1_name = "nc";
-const String motor_1_desc = "Motor controller channel B - nothing connected";
-int motor_1_direction_pin1 = 12;
-int motor_1_direction_pin2 = 13;
-int motor_1_speed_pin = 10;
+//motor 1
+const String motor_1_name = "motor0";
+const String motor_1_desc = "Motor 0";
+int motor_1_direction_pin1 = 7;
+int motor_1_direction_pin2 = 8;
+int motor_1_speed_pin = 5;
 int motor_1_speed = 0;
 
 
@@ -76,19 +96,25 @@ void setup() {
   
   // Init motor controller pins
   //motor controller channel A
-  pinMode(motor_0_direction_pin1, OUTPUT);
-  pinMode(motor_0_direction_pin2, OUTPUT);
-  pinMode(motor_0_speed_pin, OUTPUT);  
+//  pinMode(motor_0_direction_pin1, OUTPUT);
+//  pinMode(motor_0_direction_pin2, OUTPUT);
+//  pinMode(motor_0_speed_pin, OUTPUT);  
   //motor controller channel B
-  pinMode(motor_1_direction_pin1, OUTPUT);
-  pinMode(motor_1_direction_pin2, OUTPUT);
-  pinMode(motor_1_speed_pin, OUTPUT);
+//  pinMode(motor_1_direction_pin1, OUTPUT);
+//  pinMode(motor_1_direction_pin2, OUTPUT);
+//  pinMode(motor_1_speed_pin, OUTPUT);
   
   //Init servos
-  servo_0.attach(6); //Rudder servo connected to pin 3
-  servo_1.attach(5); //Camera servo connected to pin 5
+  servo_0.attach(9);
+  servo_1.attach(10);
+  servo_2.attach(11);
+  servo_3.attach(12);
+
   servo_1.write(servo_1_home);
   servo_0.write(servo_0_home);
+  servo_2.write(servo_2_home);
+  servo_3.write(servo_3_home);
+
   //Init serial connection
   Serial.begin(9600);
 }
@@ -281,8 +307,8 @@ void motor_0_set() {
 
 void motor_1_set() {
   if (motor_1_speed < 0) {
-    digitalWrite(motor_1_direction_pin1,LOW);//set direction clockwise
-    digitalWrite(motor_1_direction_pin2,HIGH);//motor_1 is connected to a LED array so we don't want to go backwards!
+    digitalWrite(motor_1_direction_pin1,HIGH);//set direction clockwise
+    digitalWrite(motor_1_direction_pin2,LOW);//motor_1 is connected to a LED array so we don't want to go backwards!
     motor_1_speed = motor_1_speed * -1; // don't be so negative!
   }
   else {
@@ -336,7 +362,6 @@ void motor_0_brake() {
   if (motor_0_speed <= 20){
     motor_0_speed = 0;
      digitalWrite(motor_0_speed,LOW);
-     digitalWrite(motor_0_speed,LOW);
         //set motor speed
      analogWrite(motor_0_speed_pin,motor_0_speed);
     
@@ -344,8 +369,21 @@ void motor_0_brake() {
 }
 
 void motor_1_brake() {
-  //code to stop motor_1 (LED LIGHT)
-  analogWrite(motor_1_speed_pin,0);
+  //code to stop motor_1 
+  //slow and stop motor
+  while (motor_1_speed > 20){
+    motor_1_speed = motor_1_speed - (motor_1_speed/10);
+    //write motor speed
+    analogWrite(motor_1_speed_pin,motor_1_speed);
+    delay(15);
+  }
+  if (motor_1_speed <= 20){
+    motor_1_speed = 0;
+     digitalWrite(motor_1_speed,LOW);
+        //set motor speed
+     analogWrite(motor_1_speed_pin,motor_1_speed);
+    
+  }
 }
 
 void serialEvent() {

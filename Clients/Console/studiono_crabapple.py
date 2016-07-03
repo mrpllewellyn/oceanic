@@ -85,20 +85,20 @@ while True:
         servo3 = 180
         
     if(char == "q"):
-        motor0 = -255
-        motor1 = 255
-        servo0 = 90
-        servo1 = 0
-        servo2 = 90
-        servo3 = 0
-        
-    if(char == "e"):
         motor0 = 255
         motor1 = -255
         servo0 = 90
         servo1 = 0
-        servo2 = 90
-        servo3 = 0
+        servo2 = 0
+        servo3 = 90
+        
+    if(char == "e"):
+        motor0 = -255
+        motor1 = 255
+        servo0 = 90
+        servo1 = 180
+        servo2 = 180
+        servo3 = 90
         
 
 

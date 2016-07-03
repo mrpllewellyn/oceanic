@@ -59,6 +59,7 @@ values = {
     'servo4': 90,
     'servo5': 90,
     'motor0': 0,
+    'motor1': 0,
 }
 
 def sendSerial():
@@ -70,7 +71,8 @@ def sendSerial():
     ser.write(b'S4%dt99999\n' % int(values['servo4']))
     ser.write(b'S5%dt99999\n' % int(values['servo5']))
     ser.write(b'M0%dt99999\n' % int(values['motor0']))
-    
+    ser.write(b'M1%dt99999\n' % int(values['motor1']))
+        
 def background_thread():
     global something_changed
     count = 0
@@ -91,7 +93,7 @@ def index():
         thread = Thread(target=background_thread)
         thread.daemon = True
         thread.start()
-    return render_template('studuino.html', **values)
+    return render_template('studuino_b.html', **values)
 
 
 @socketio.on('my event', namespace='/seasquirt')

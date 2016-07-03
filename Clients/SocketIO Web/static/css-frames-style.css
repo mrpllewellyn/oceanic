@@ -10,26 +10,28 @@ div#header-wrapper {
 
 div#header {
     height:50px;
-    margin-left:100px;
+    margin-left:200px;
 }
 
 div#leftbar-wrapper {
     position:fixed;
     margin-top: 100px;
     top:0;
-    left:0;
+    left:5;
     margin-top:0;
     height:100%;
+    width: 200px;
 }
 div#leftbar {
     height:100%;
+    width:200px;
     margin:0 auto;
 }
 div#rightbar-wrapper {
     position:fixed;
     margin-top: 100px;
-    width:40px;
-    margin-left: 40px;
+    width:200px;
+    margin-left: 80px;
     top:0;
     left:10px;
     margin-top:0;
@@ -45,7 +47,7 @@ div#footer-wrapper {
     position:fixed;
     margin:0 auto;
     height:100px;
-    top:0;
+    bottom:0;
     right:0;
 }
 

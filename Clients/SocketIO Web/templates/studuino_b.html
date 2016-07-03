@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="mobile-web-app-capable" content="yes">
-    <title>The Oceanic Controller</title>
+    <title>Seasquirt Interface</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
     <script type="text/javascript" charset="utf-8">
@@ -62,17 +62,17 @@
             <input id="servo2" style="width: 95%;" name="servo0" type="range" class="sync" min="0" max="180" value="{{servo2}}" />
             <br>Servo 3<br>
             <input id="servo3" style="width: 95%;" name="servo1" type="range" class="sync" min="0" max="180" value="{{servo3}}" />
-            <br>Servo 4<br>
-            <input id="servo4" style="width: 95%;" name="servo0" type="range" class="sync" min="0" max="180" value="{{servo4}}" />
-            <br>Servo 5<br>
-            <input id="servo5" style="width: 95%;" name="servo5" type="range" class="sync" min="0" max="180" value="{{servo5}}" />
-
             </div>
         </div>
         <div id="leftbar-wrapper">
             <div id ="leftbar">
-            Motor<br>
-            <input id="motor0" orient="vertical" style="width: 40px; height: 95%; -webkit-appearance: slider-vertical;" name="motor0" type="range" class="sync" min="-255" max="255" value="{{motor0}}" />
+            <br>Motor 0<br>
+            <input id="motor0" orient="vertical" style="width: 50px; height: 90%; -webkit-appearance: slider-vertical;" name="motor0" type="range" class="sync" min="-255" max="255" value="{{motor0}}" />
+        </div>
+        <div id="rightbar-wrapper">
+            <div id ="rightbar">
+            <br>Motor 1<br>
+            <input id="motor1" orient="vertical" style="width: 50px; height: 90%; -webkit-appearance: slider-vertical;" name="motor1" type="range" class="sync" min="-255" max="255" value="{{motor1}}" />
             </div>
         </div>
         <div id="footer-wrapper">

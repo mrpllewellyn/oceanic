@@ -84,6 +84,18 @@ unsigned long motor_1_tsl;
 boolean motor_1_active = false; //let's us know if a command is being run on motor_1
 boolean motor_1_direction_lock = false;
 
+//speaker
+int speakerOut = A0;
+
+//bumper switches
+int bumperLeft = A3;
+int bumperRight = A2;
+int bumperLeftstate = 0;
+int bumperRightstate = 0;
+
+//led
+int ledPin = A1;
+
 
 //Serial input
 String serial_input = "";
@@ -121,6 +133,7 @@ void setup() {
   servo_2.write(servo_2_home);
   servo_3.write(servo_3_home);
 
+
   //Init serial connection
   Serial.begin(9600);
 
@@ -141,7 +154,6 @@ void loop() {
 
   //check if we should stop doing anything
   check_timeouts();
-
 }
 
 void serialEvent() {
@@ -286,13 +298,15 @@ void motor_0_set() {
       digitalWrite(motor_0_direction_pin1,HIGH);//set direction anticlockwise
       digitalWrite(motor_0_direction_pin2,LOW);
     }
-    motor_0_speed = motor_0_speed * -1; // don't be so negative!
-  }
-  else { 
-    if (motor_0_direction_lock == false) {
+    else {
       digitalWrite(motor_0_direction_pin1,LOW);//set direction clockwise
       digitalWrite(motor_0_direction_pin2,HIGH);
     }
+    motor_0_speed = motor_0_speed * -1; // don't be so negative!
+  }
+  else { 
+      digitalWrite(motor_0_direction_pin1,LOW);//set direction clockwise
+      digitalWrite(motor_0_direction_pin2,HIGH);
   }
 
   //run motor at given speed
@@ -315,14 +329,17 @@ void motor_1_set() {
       digitalWrite(motor_1_direction_pin1,HIGH);//set direction anticlockwise
       digitalWrite(motor_1_direction_pin2,LOW);
     }
-    motor_1_speed = motor_1_speed * -1; // don't be so negative!
-  }
-  else { 
-    if (motor_1_direction_lock == false) {
+    else {
       digitalWrite(motor_1_direction_pin1,LOW);//set direction clockwise
       digitalWrite(motor_1_direction_pin2,HIGH);
     }
+    motor_1_speed = motor_1_speed * -1; // don't be so negative!
   }
+  else { 
+      digitalWrite(motor_1_direction_pin1,LOW);//set direction clockwise
+      digitalWrite(motor_1_direction_pin2,HIGH);
+  }
+
 
   //run motor at given speed
   analogWrite(motor_1_speed_pin, motor_1_speed);  
@@ -452,6 +469,23 @@ void safety_checks() {
   // else
   // motor_0_direction_lock = false;
   // motor_1_direction_lock = false;
+  bumperLeftstate = analogRead(bumperLeft);
+  bumperRightstate = analogRead(bumperRight);
+  if (bumperRightstate == 0) {
+    motor_0_direction_lock = 1;
+    motor_1_direction_lock = 1;
+  }
+  else if (bumperLeftstate == 0) {
+    motor_0_direction_lock = 1;
+    motor_1_direction_lock = 1;
+  }
+  else {
+    motor_0_direction_lock = 0;
+    motor_1_direction_lock = 0;
+  }
+    
 }
+
+
 
 

@@ -3,7 +3,8 @@
 
 #include <MsTimer2.h>
 #include <Servo.h>
-
+#include "constants.h"
+#include "pins.h"
 
 // generate servo objects
 Servo servo_0,servo_1,servo_2,servo_3;
@@ -14,88 +15,44 @@ const int default_timeout = 1000; // fallback timeout if not specified, in ms
 
 //  servo 0
 int servo_0_pos = 0; //define variable used for setting servo position
-const int servo_0_home = 90; // sets the default centre/"home" position for the servo
-const int servo_0_softmin = 0; // sets the minimum position that the rudder can turn to, in degrees
-const int servo_0_softmax = 180; // sets the maximum position that the rudder can turn to, in degrees
-const String servo_0_name = "servo0";
-const String servo_0_desc = "Servo 0";
 int servo_0_timeout = 1000; //sets initial timeout in ms for servo_0
 unsigned long servo_0_tsl;
 boolean servo_0_active = false; //let's us know if a command is being run on servo_0
 
-
 //  servo 1
 int servo_1_pos = 0; //define variable used for setting servo position
-const int servo_1_home = 90; // sets the default centre/"home" position for the servo
-const int servo_1_softmin = 0; // sets the minimum position that the camera can turn to, in degrees
-const int servo_1_softmax = 180; // sets the maximum position that the camera can turn to, in degrees
-const String servo_1_name = "servo1";
-const String servo_1_desc = "Servo 1";
 int servo_1_timeout = 1000; //sets initial timeout in ms for servo_1
 unsigned long servo_1_tsl;
 boolean servo_1_active = false; //let's us know if a command is being run on servo_1
 
 //  servo 2
 int servo_2_pos = 0; //define variable used for setting servo position
-const int servo_2_home = 90; // sets the default centre/"home" position for the servo
-const int servo_2_softmin = 0; // sets the minimum position that the rudder can turn to, in degrees
-const int servo_2_softmax = 180; // sets the maximum position that the rudder can turn to, in degrees
-const String servo_2_name = "servo2";
-const String servo_2_desc = "Servo 2";
 int servo_2_timeout = 1000; //sets initial timeout in ms for servo_2
 unsigned long servo_2_tsl;
 boolean servo_2_active = false; //let's us know if a command is being run on servo_2
 
 //  servo 3
 int servo_3_pos = 0; //define variable used for setting servo position
-const int servo_3_home = 90; // sets the default centre/"home" position for the servo
-const int servo_3_softmin = 0; // sets the minimum position that the camera can turn to, in degrees
-const int servo_3_softmax = 180; // sets the maximum position that the camera can turn to, in degrees
-const String servo_3_name = "servo3";
-const String servo_3_desc = "Servo 3";
 int servo_3_timeout = 1000; //sets initial timeout in ms for servo_3
 unsigned long servo_3_tsl;
 boolean servo_3_active = false; //let's us know if a command is being run on servo_3
 
 // motor 0
-const String motor_0_name = "motor0";
-const String motor_0_desc = "Motor 0";
-int motor_0_direction_pin1 = 2;
-int motor_0_direction_pin2 = 4;
-int motor_0_speed_pin = 3;
 int motor_0_speed = 0;
-
-// motor 1
-const String motor_1_name = "motor1";
-const String motor_1_desc = "Motor 1";
-int motor_1_direction_pin1 = 7;
-int motor_1_direction_pin2 = 8;
-int motor_1_speed_pin = 5;
-int motor_1_speed = 0;
-
 int motor_0_timeout = 1000; // sets initial timeout in ms for motor_0
 unsigned long motor_0_tsl;
 boolean motor_0_active = false; //let's us know if a command is being run on motor_0
 boolean motor_0_direction_lock = false;
 
-
-int motor_1_timeout = 1000; // sets initial timeout in ms for motor_1
+// motor 1
+int motor_1_timeout = 1000; // sets in1itial timeout in ms for motor_1
 unsigned long motor_1_tsl;
 boolean motor_1_active = false; //let's us know if a command is being run on motor_1
 boolean motor_1_direction_lock = false;
+int motor_1_speed = 0;
 
-//speaker
-int speakerOut = A0;
-
-//bumper switches
-int bumperLeft = A3;
-int bumperRight = A2;
 int bumperLeftstate = 0;
 int bumperRightstate = 0;
-
-//led
-int ledPin = A1;
-
 
 //Serial input
 String serial_input = "";
@@ -112,17 +69,7 @@ int pos = 0;
 
 
 void setup() {
-  
-  // Init motor controller pins
-  //motor controller channel A
-//  pinMode(motor_0_direction_pin1, OUTPUT);
-//  pinMode(motor_0_direction_pin2, OUTPUT);
-//  pinMode(motor_0_speed_pin, OUTPUT);  
-  //motor controller channel B
-//  pinMode(motor_1_direction_pin1, OUTPUT);
-//  pinMode(motor_1_direction_pin2, OUTPUT);
-//  pinMode(motor_1_speed_pin, OUTPUT);
-  
+    
   //Init servos
   servo_0.attach(9);
   servo_1.attach(10);
@@ -133,10 +80,10 @@ void setup() {
   servo_2.write(servo_2_home);
   servo_3.write(servo_3_home);
 
-
   //Init serial connection
   Serial.begin(9600);
 
+  //check state of the bumper switches every 100ms
   MsTimer2::set(100, safety_checks); // perform safety checks every 100ms period, can't use hardware interupts because the pins 2 and 3 are used elsewhere
   MsTimer2::start();
 }

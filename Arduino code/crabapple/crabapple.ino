@@ -8,6 +8,7 @@ Servo servo0,servo1,servo2,servo3;
 #include "servoFunctions.h"
 #include "motorFunctions.h"
 #include "lightFunctions.h"
+#include "buttonFunctions.h"
 #include "comms.h"
 #include "init.h"
            

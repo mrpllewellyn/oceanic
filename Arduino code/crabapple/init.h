@@ -16,6 +16,9 @@ void initfoo()
   motorPtrs[1] = do_motor1;
 
   lightPtrs[0] = do_light0; 
+
+  buttonPtrs[0] = do_button0;
+  buttonPtrs[1] = do_button1;
   
   servo0.attach(servo0_data.Pin);
   servo1.attach(servo1_data.Pin);

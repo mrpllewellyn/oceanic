@@ -33,6 +33,12 @@ struct light {
     unsigned long lastMillis;
 };
 
+struct button {
+    byte Pin;
+    boolean state;
+    unsigned int Timeout;
+};
+
 struct cmd {
     char obj_type;
     byte obj_number;

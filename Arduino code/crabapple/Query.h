@@ -25,6 +25,11 @@ void query_light(light query) {
   Serial.println(query.Timeout);
 }
 
+void query_button(button query) {
+  Serial.println(query.state);
+  Serial.println(query.Timeout);
+}
+
 
 
 #endif

@@ -28,6 +28,16 @@ void process_command() {
     int value = cmd_q[cmd_number].value;
     callServo(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
   }
+
+  else if (cmd_q[cmd_number].obj_type == LIGHT_CMD){
+    int value = cmd_q[cmd_number].value;
+    callLight(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+  }
+
+  else if (cmd_q[cmd_number].obj_type == BUTTON_CMD){
+    int value = cmd_q[cmd_number].value;
+    callButton(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+  }
   
   else {
   Serial.println(F("Command type not recognised"));    
@@ -58,6 +68,12 @@ void query_all() {
     Serial.print(F("light:"));
     Serial.println(i);
     callLight(i, 0, QUERY_CMD);
+    Serial.println();
+  }
+  for (int i = 0; i < num_buttons; i++){
+    Serial.print(F("button:"));
+    Serial.println(i);
+    callButton(i, 0, QUERY_CMD);
     Serial.println();
   }
 }

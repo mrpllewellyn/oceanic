@@ -6,7 +6,8 @@
 
 void do_light0(int value, char action) {
   if (action == DO_CMD){
-
+    analogWrite(light0_data.Pin, value);
+    light0_data.brightness = value;
   }
   else if (action == QUERY_CMD){
     query_light(light0_data);

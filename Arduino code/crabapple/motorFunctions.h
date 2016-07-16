@@ -1,10 +1,10 @@
-  #ifndef motorFucntions_h
+#ifndef motorFucntions_h
 #define motorFucntions_h
 
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-void set_motor_direction(boolean Direction, byte pin1, byte pin2){
+void setMotorDirection(boolean Direction, byte pin1, byte pin2){
   if (Direction == 0) {
     digitalWrite(pin1,HIGH);//set direction anticlockwise
     digitalWrite(pin2,LOW);
@@ -15,63 +15,35 @@ void set_motor_direction(boolean Direction, byte pin1, byte pin2){
   }
 }
 
-void drive_motor(byte duty, byte pin){
+void driveMotor(byte duty, byte pin){
   analogWrite(pin, duty);
 }
 
-void do_motor0(int value, char action) {
+void doMotor(int index, int value, char action) {
   
   if (action == DO_CMD){
     if (value < 0){
-      motordata[0].Direction = 0; //go backwards
+      motordata[index].Direction = 0; //go backwards
       value = value * -1;
     }
     else {
-      motordata[0].Direction = 1; //go forwards
+      motordata[index].Direction = 1; //go forwards
     }
-    set_motor_direction(motordata[0].Direction, motordata[0].dirPin1, motordata[0].dirPin2);
-    if (value <= motordata[0].Limit && value >= 0){
-      motordata[0].Speed = value;
-      drive_motor(value, motordata[0].speedPin);
+    setMotorDirection(motordata[index].Direction, motordata[index].dirPin1, motordata[index].dirPin2);
+    if (value <= motordata[index].Limit && value >= 0){
+      motordata[index].Speed = value;
+      driveMotor(value, motordata[index].speedPin);
     }
   }
   
   else if (action == QUERY_CMD){
-    query_motor(motordata[0]);
+    query_motor(motordata[index]);
   }
   
   else if (action == SETTIMEOUT_CMD){
-    motordata[0].Timeout = value;
+    motordata[index].Timeout = value;
   }
   
 }
-
-void do_motor1(int value, char action) {
-  
-  if (action == DO_CMD){
-    if (value < 0){
-      motordata[1].Direction = 0; //go backwards
-      value = value * -1;
-    }
-    else {
-      motordata[1].Direction = 1; //go forwards
-    }
-    set_motor_direction(motordata[1].Direction, motordata[1].dirPin1, motordata[1].dirPin2);
-    if (value <= motordata[0].Limit && value >= 0){
-      motordata[1].Speed = value;
-      drive_motor(value, motordata[1].speedPin);
-    }
-  }
-  
-  else if (action == QUERY_CMD){
-    query_motor(motordata[1]);
-  }
-  
-  else if (action == SETTIMEOUT_CMD){
-    motordata[1].Timeout = value;
-  }
-  
-}
-
 
 #endif

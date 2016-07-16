@@ -4,18 +4,17 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-void do_light0(int value, char action) {
+void doLight(int index, int value, char action) {
   if (action == DO_CMD){
-    analogWrite(lightdata[0].Pin, value);
-    lightdata[0].brightness = value;
+    analogWrite(lightdata[index].Pin, value);
+    lightdata[index].brightness = value;
   }
   else if (action == QUERY_CMD){
-    query_light(lightdata[0]);
+    query_light(lightdata[index]);
   }
   else if (action == SETTIMEOUT_CMD){
-    lightdata[0].Timeout = value;
+    lightdata[index].Timeout = value;
   }  
 }
-
 
 #endif

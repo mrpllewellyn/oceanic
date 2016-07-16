@@ -21,22 +21,22 @@ void process_command() {
   
   if (cmd_q[cmd_number].obj_type == MOTOR_CMD){
     int value = cmd_q[cmd_number].value;
-    callMotor(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+    doMotor(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
  } 
  
   else if (cmd_q[cmd_number].obj_type == SERVO_CMD){
     int value = cmd_q[cmd_number].value;
-    callServo(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+    doServo(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
   }
 
   else if (cmd_q[cmd_number].obj_type == LIGHT_CMD){
     int value = cmd_q[cmd_number].value;
-    callLight(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+    doLight(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
   }
 
   else if (cmd_q[cmd_number].obj_type == BUTTON_CMD){
     int value = cmd_q[cmd_number].value;
-    callButton(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+    doButton(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
   }
   
   else {
@@ -55,25 +55,25 @@ void query_all() {
   for (int i = 0; i < num_servos; i++){
     Serial.print(F("servo:"));
     Serial.println(i);
-    callServo(i, 0, QUERY_CMD);
+    doServo(i, 0, QUERY_CMD);
     Serial.println();
   }
   for (int i = 0; i < num_motors; i++){
     Serial.print(F("motor:"));
     Serial.println(i);
-    callMotor(i, 0, QUERY_CMD);
+    doMotor(i, 0, QUERY_CMD);
     Serial.println();
   }
   for (int i = 0; i < num_lights; i++){
     Serial.print(F("light:"));
     Serial.println(i);
-    callLight(i, 0, QUERY_CMD);
+    doLight(i, 0, QUERY_CMD);
     Serial.println();
   }
   for (int i = 0; i < num_buttons; i++){
     Serial.print(F("button:"));
     Serial.println(i);
-    callButton(i, 0, QUERY_CMD);
+    doButton(i, 0, QUERY_CMD);
     Serial.println();
   }
 }
@@ -124,9 +124,5 @@ void cmd_constructor(char inChar) { //construct commands from byte-by-byte input
     break;
   }
 }
-
-
-
-
 
 #endif

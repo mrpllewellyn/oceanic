@@ -2,7 +2,6 @@
 #include "structs.h"
 #include "conf.h"
 #include "Query.h"
-#include "functionPointers.h"
 #include "servoFunctions.h"
 #include "motorFunctions.h"
 #include "lightFunctions.h"

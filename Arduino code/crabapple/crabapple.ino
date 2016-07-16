@@ -1,7 +1,7 @@
 #include <Servo.h>
 #include "structs.h"
 #include "conf.h"
-#include "Query.h"
+#include "queryFunctions.h"
 #include "servoFunctions.h"
 #include "motorFunctions.h"
 #include "lightFunctions.h"
@@ -9,7 +9,7 @@
 #include "comms.h"
 #include "init.h"
 #include "timeout.h"
-           
+
 void setup()
 {
   Serial.begin(9600);

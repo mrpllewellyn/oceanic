@@ -9,7 +9,7 @@ void initfoo()
 {
   load_conf();
 
-  for (int i = 0; i < num_servos; i++){
+  for (int i = 0; i < num_servos; i++) {
     servo_[i].attach(servodata[i].Pin);
     servo_[i].write(servodata[i].Home);
   }

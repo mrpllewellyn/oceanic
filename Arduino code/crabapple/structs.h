@@ -37,6 +37,7 @@ struct button {
     byte Pin;
     boolean state;
     unsigned int Timeout;
+    unsigned long lastMillis;
 };
 
 struct cmd {

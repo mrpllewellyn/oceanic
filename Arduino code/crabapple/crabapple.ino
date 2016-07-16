@@ -8,13 +8,13 @@
 #include "buttonFunctions.h"
 #include "comms.h"
 #include "init.h"
+#include "timeout.h"
            
 void setup()
 {
   Serial.begin(9600);
   initfoo();
   Serial.println("init complete");
-
 }
 
 void serialEvent() {
@@ -22,17 +22,14 @@ void serialEvent() {
     // get the new byte:
     cmd_constructor((char)Serial.read());
   }
-  
 }
 
- 
 void loop()
 {
   if (cmds_pending > 0) {
     process_command();
   }
   delay(10);
-
 }
 
 

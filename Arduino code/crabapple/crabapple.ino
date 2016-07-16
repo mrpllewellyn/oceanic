@@ -30,7 +30,6 @@ void loop()
     process_command();
   }
   check_timeouts();
-  delay(10);
 }
 
 

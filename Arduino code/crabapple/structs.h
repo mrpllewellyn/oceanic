@@ -46,5 +46,4 @@ struct cmd {
     int value;  
 };
 
-
 #endif

@@ -7,6 +7,7 @@
 
 void initfoo()
 {
+  load_conf();
   servoPtrs[0] = do_servo0; //initializes the arrays
   servoPtrs[1] = do_servo1;
   servoPtrs[2] = do_servo2;
@@ -20,14 +21,14 @@ void initfoo()
   buttonPtrs[0] = do_button0;
   buttonPtrs[1] = do_button1;
   
-  servo0.attach(servo0_data.Pin);
-  servo1.attach(servo1_data.Pin);
-  servo2.attach(servo2_data.Pin);
-  servo3.attach(servo3_data.Pin); 
-  servo0.write(servo0_data.Home);
-  servo1.write(servo1_data.Home);
-  servo2.write(servo2_data.Home);
-  servo3.write(servo3_data.Home); 
+  servo_[0].attach(servodata[0].Pin);
+  servo_[1].attach(servodata[1].Pin);
+  servo_[2].attach(servodata[2].Pin);
+  servo_[3].attach(servodata[3].Pin); 
+  servo_[0].write(servodata[0].Home);
+  servo_[1].write(servodata[1].Home);
+  servo_[2].write(servodata[2].Home);
+  servo_[3].write(servodata[3].Home); 
 }
 
 #endif

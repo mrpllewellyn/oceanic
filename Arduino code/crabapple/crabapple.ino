@@ -1,6 +1,4 @@
 #include <Servo.h>
-Servo servo0,servo1,servo2,servo3;
-
 #include "structs.h"
 #include "conf.h"
 #include "Query.h"

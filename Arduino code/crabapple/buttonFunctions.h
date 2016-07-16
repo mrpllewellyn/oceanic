@@ -9,11 +9,11 @@ void do_button0(int value, char action) {
 
   }
   else if (action == QUERY_CMD){
-    button0_data.state = !(digitalRead(button0_data.Pin));
-    query_button(button0_data);
+    buttondata[0].state = !(digitalRead(buttondata[0].Pin));
+    query_button(buttondata[0]);
   }
   else if (action == SETTIMEOUT_CMD){
-    button0_data.Timeout = value;
+    buttondata[0].Timeout = value;
   }  
 }
 
@@ -22,11 +22,11 @@ void do_button1(int value, char action) {
 
   }
   else if (action == QUERY_CMD){
-    button1_data.state = !(digitalRead(button1_data.Pin));
-    query_button(button1_data);
+    buttondata[1].state = !(digitalRead(buttondata[1].Pin));
+    query_button(buttondata[1]);
   }
   else if (action == SETTIMEOUT_CMD){
-    button1_data.Timeout = value;
+    buttondata[1].Timeout = value;
   }  
 }
 

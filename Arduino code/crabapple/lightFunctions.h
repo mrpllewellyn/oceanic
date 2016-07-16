@@ -6,14 +6,14 @@
 
 void do_light0(int value, char action) {
   if (action == DO_CMD){
-    analogWrite(light0_data.Pin, value);
-    light0_data.brightness = value;
+    analogWrite(lightdata[0].Pin, value);
+    lightdata[0].brightness = value;
   }
   else if (action == QUERY_CMD){
-    query_light(light0_data);
+    query_light(lightdata[0]);
   }
   else if (action == SETTIMEOUT_CMD){
-    light0_data.Timeout = value;
+    lightdata[0].Timeout = value;
   }  
 }
 

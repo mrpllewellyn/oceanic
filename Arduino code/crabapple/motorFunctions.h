@@ -33,6 +33,7 @@ void doMotor(int index, int value, char action) {
     if (value <= motordata[index].Limit && value >= 0){
       motordata[index].Speed = value;
       driveMotor(value, motordata[index].speedPin);
+      motordata[index].lastMillis = millis();
     }
   }
   

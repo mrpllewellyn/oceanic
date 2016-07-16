@@ -29,6 +29,7 @@ void loop()
   if (cmds_pending > 0) {
     process_command();
   }
+  check_timeouts();
   delay(10);
 }
 

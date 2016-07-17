@@ -49,8 +49,8 @@ void load_conf() {
 
   //buttons
   //pin, state (boolean), timeout
-  buttondata[0] = {A2, 0, 1000};
-  buttondata[1] = {A3, 0, 1000};
+  buttondata[0] = {A2, 0, 50};
+  buttondata[1] = {A3, 0, 50};
 }
 
 

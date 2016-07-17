@@ -12,7 +12,16 @@ void query_button(button query) {
 void doButton(int index, int value, char action) {
 
   if (action == DO_CMD) {
-    buttondata[index].lastMillis = millis();
+    if (!(digitalRead(buttondata[index].Pin))){
+      buttondata[index].state = 1;
+      Serial.print(F("button:"));
+      Serial.print(index);
+      Serial.println(F(" pressed"));
+      buttondata[index].lastMillis = millis();
+    }
+    else {
+      buttondata[index].state = 1;
+    }
   }
 
   else if (action == QUERY_CMD) {

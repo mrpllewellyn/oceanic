@@ -25,7 +25,7 @@ void check_timeouts() {
 
   for (int i = 0; i < num_buttons; i++) {
     if ((millis() - buttondata[i].lastMillis) > buttondata[i].Timeout) {
-      //doButton(i, 0, DO_CMD); //no need to timeout buttons.. for now
+      doButton(i, 0, DO_CMD); //checks button state at timeout
     }
   }
 }

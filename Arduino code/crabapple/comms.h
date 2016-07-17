@@ -16,6 +16,13 @@ byte q_counter;
 byte cmd_number;
 String tmp_string;
 
+/* commands are formatted like such: OBJTYPE OBJNUMBER ACTION VALUE
+ *                                eg: 'S1:100' sets servo1 to position 100 degrees
+ *                                    'M0t5000' sets motor0 timeout to 5000ms
+ *                                    'L0?' queries the state of light0
+ *                                    '?' queries everything
+ * object type and action identifiers are set in conf.h
+ */
 
 void process_command() {
 
@@ -49,33 +56,6 @@ void process_command() {
     cmd_number = 0;
   }
 
-}
-
-void query_all() {
-  for (int i = 0; i < num_servos; i++) {
-    Serial.print(F("servo:"));
-    Serial.println(i);
-    doServo(i, 0, QUERY_CMD);
-    Serial.println();
-  }
-  for (int i = 0; i < num_motors; i++) {
-    Serial.print(F("motor:"));
-    Serial.println(i);
-    doMotor(i, 0, QUERY_CMD);
-    Serial.println();
-  }
-  for (int i = 0; i < num_lights; i++) {
-    Serial.print(F("light:"));
-    Serial.println(i);
-    doLight(i, 0, QUERY_CMD);
-    Serial.println();
-  }
-  for (int i = 0; i < num_buttons; i++) {
-    Serial.print(F("button:"));
-    Serial.println(i);
-    doButton(i, 0, QUERY_CMD);
-    Serial.println();
-  }
 }
 
 void cmd_queue() { //add command to command Q

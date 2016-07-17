@@ -4,6 +4,15 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
+
+void query_servo(servo query) {
+  Serial.println(query.Min);
+  Serial.println(query.Max);
+  Serial.println(query.Home);
+  Serial.println(query.Pos);
+  Serial.println(query.Timeout);
+}
+
 void doServo(int index, int value, char action) {
 
   if (action == DO_CMD) {

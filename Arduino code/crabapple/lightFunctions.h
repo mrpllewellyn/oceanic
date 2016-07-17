@@ -4,6 +4,12 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
+void query_light(light query) {
+  Serial.println(query.default_brightness);
+  Serial.println(query.brightness);
+  Serial.println(query.Timeout);
+}
+
 void doLight(int index, int value, char action) {
 
   if (action == DO_CMD) {

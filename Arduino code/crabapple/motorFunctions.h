@@ -4,6 +4,13 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
+void query_motor(motor query) {
+  Serial.println(query.Speed);
+  Serial.println(query.Direction);
+  Serial.println(query.Limit);
+  Serial.println(query.Timeout);
+}
+
 void setMotorDirection(boolean Direction, byte pin1, byte pin2) {
   if (Direction == 0) {
     digitalWrite(pin1, HIGH); //set direction anticlockwise

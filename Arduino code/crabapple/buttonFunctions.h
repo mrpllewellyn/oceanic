@@ -4,6 +4,11 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
+void query_button(button query) {
+  Serial.println(query.state);
+  Serial.println(query.Timeout);
+}
+
 void doButton(int index, int value, char action) {
 
   if (action == DO_CMD) {

@@ -1,11 +1,11 @@
 #include <Servo.h>
 #include "structs.h"
 #include "conf.h"
-#include "queryFunctions.h"
 #include "servoFunctions.h"
 #include "motorFunctions.h"
 #include "lightFunctions.h"
 #include "buttonFunctions.h"
+#include "queryAll.h"
 #include "comms.h"
 #include "init.h"
 #include "timeout.h"

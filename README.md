@@ -1,5 +1,5 @@
 # seasquirt
-Arduino and python code for interfacing with artec robotist "Studuino" servo/motor/sensor board 
+Arduino and python code for interfacing with servo/motors/sensor/buttons etc connected to an arduino compatible board with minimal reconfiguration/rewriting required between boards.
 
 named 'seasquirt' as 
 

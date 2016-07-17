@@ -5,6 +5,7 @@
 #include "motorFunctions.h"
 #include "lightFunctions.h"
 #include "buttonFunctions.h"
+#include "programs.h"
 #include "queryAll.h"
 #include "comms.h"
 #include "init.h"

@@ -46,6 +46,11 @@ void process_command() {
     doButton(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
   }
 
+  else if (cmd_q[cmd_number].obj_type == PROG_CMD) {
+    int value = cmd_q[cmd_number].value;
+    doProgram(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+  }
+
   else {
     Serial.println(F("Command type not recognised"));
   }

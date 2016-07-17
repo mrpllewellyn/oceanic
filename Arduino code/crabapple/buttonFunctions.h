@@ -4,9 +4,13 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-void query_button(button query) {
+void query_button(button query, int index) {
+  Serial.print(F("button"));
+  Serial.println(index);
+  Serial.println(query.Desc);
   Serial.println(query.state);
   Serial.println(query.Timeout);
+  Serial.println();
 }
 
 void doButton(int index, int value, char action) {
@@ -26,7 +30,7 @@ void doButton(int index, int value, char action) {
 
   else if (action == QUERY_CMD) {
     buttondata[index].state = !(digitalRead(buttondata[index].Pin));
-    query_button(buttondata[index]);
+    query_button(buttondata[index], index);
   }
 
   else if (action == SETTIMEOUT_CMD) {

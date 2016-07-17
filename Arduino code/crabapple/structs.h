@@ -11,6 +11,7 @@ struct servo {
   byte Home;
   byte Pos;
   unsigned int Timeout;
+  String Desc;
   unsigned long lastMillis;
 };
 
@@ -22,6 +23,7 @@ struct motor {
   byte Limit;
   boolean Direction;
   unsigned int Timeout;
+  String Desc;
   unsigned long lastMillis;
 };
 
@@ -30,6 +32,7 @@ struct light {
   byte default_brightness;
   byte brightness;
   unsigned int Timeout;
+  String Desc;
   unsigned long lastMillis;
 };
 
@@ -37,6 +40,7 @@ struct button {
   byte Pin;
   boolean state;
   unsigned int Timeout;
+  String Desc;
   unsigned long lastMillis;
 };
 
@@ -45,6 +49,13 @@ struct cmd {
   byte obj_number;
   char action_type;
   int value;
+};
+
+struct prog {
+  boolean state;
+  unsigned int Timeout;
+  String Desc;
+  unsigned long lastMillis;
 };
 
 #endif

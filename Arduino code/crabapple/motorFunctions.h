@@ -4,11 +4,15 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-void query_motor(motor query) {
+void query_motor(motor query, int index) {
+  Serial.print(F("motor"));
+  Serial.println(index);
+  Serial.println(query.Desc);
   Serial.println(query.Speed);
   Serial.println(query.Direction);
   Serial.println(query.Limit);
   Serial.println(query.Timeout);
+  Serial.println();
 }
 
 void setMotorDirection(boolean Direction, byte pin1, byte pin2) {
@@ -45,7 +49,7 @@ void doMotor(int index, int value, char action) {
   }
 
   else if (action == QUERY_CMD) {
-    query_motor(motordata[index]);
+    query_motor(motordata[index], index);
   }
 
   else if (action == SETTIMEOUT_CMD) {

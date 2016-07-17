@@ -5,12 +5,16 @@
 #include <Arduino.h>
 
 
-void query_servo(servo query) {
+void query_servo(servo query, int index) {
+  Serial.print(F("servo"));
+  Serial.println(index);
+  Serial.println(query.Desc);
   Serial.println(query.Min);
   Serial.println(query.Max);
   Serial.println(query.Home);
   Serial.println(query.Pos);
   Serial.println(query.Timeout);
+  Serial.println();
 }
 
 void doServo(int index, int value, char action) {
@@ -25,7 +29,7 @@ void doServo(int index, int value, char action) {
 
   else if (action == QUERY_CMD) {
     servodata[index].Pos = servo_[index].read();
-    query_servo(servodata[index]);
+    query_servo(servodata[index], index);
   }
 
   else if (action == SETTIMEOUT_CMD) {

@@ -34,17 +34,21 @@ void doProgram(int index, int value, char action) {
 void go_forward(int i){ // prog0
   progdata[i].lastMillis = millis();
   while ((millis() - progdata[i].lastMillis) < progdata[i].Timeout){
+    progdata[i].state = 1;
     doMotor(0, 255, DO_CMD);
     doMotor(1, 255, DO_CMD);    
   }
+  progdata[i].state = 0;
 }
 
 void go_backward(int i){ // prog1
   progdata[i].lastMillis = millis();
   while ((millis() - progdata[i].lastMillis) < progdata[i].Timeout){
+    progdata[i].state = 1;
     doMotor(0, -255, DO_CMD);
     doMotor(1, -255, DO_CMD);    
   }
+  progdata[i].state = 0;
 } 
 
 void go_left(int i){} //prog2

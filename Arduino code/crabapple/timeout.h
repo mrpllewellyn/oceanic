@@ -28,6 +28,13 @@ void check_timeouts() {
       doButton(i, 0, DO_CMD); //checks button state at timeout
     }
   }
+
+  for (int i = 0; i < num_programs; i++) {
+    if ((millis() - progdata[i].lastMillis) > progdata[i].Timeout) {
+      progdata[i].state = false; //behaves differently to other object types and just changes state property
+    }
+  }
+  
 }
 
 #endif

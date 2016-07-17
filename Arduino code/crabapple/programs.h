@@ -4,6 +4,9 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
+int progcounter; //counter to test program loops
+int timebetweenloops;
+
 void query_prog(prog query, int index) {
   Serial.print(F("program"));
   Serial.println(index);
@@ -17,9 +20,9 @@ void doProgram(int index, int value, char action) {
   
   if (action == DO_CMD) {
     if (index < num_programs){
-      (*programPtrs[index])(index); //calls the program at the index of `index` in the pointers array
+      progdata[index].state = true; //sets run state to true, this is different from other object types that swich on/change objects directly. programTimer will handle running programs.
+      progdata[index].lastMillis = millis();
     }
-  
   }
 
   else if (action == QUERY_CMD) {
@@ -55,7 +58,19 @@ void go_left(int i){} //prog2
 
 void go_right(int i){} //prog3
 
-void bumper_test(int i){} //prog4
+void bumper_test(int i){ //prog4
+  progcounter++;
+  if (progcounter > 30000){
+    int temp = (millis() - timebetweenloops);
+    temp = (temp / 30);
+    Serial.println(F("this line gets printed every 30000 runs while active"));
+    Serial.print(F("each loops takes: "));
+    Serial.print(temp);
+    Serial.println(F("microseconds"));
+    timebetweenloops = millis();
+    progcounter = 0;
+  }
+} 
 
 
 #endif

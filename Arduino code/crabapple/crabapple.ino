@@ -10,6 +10,7 @@
 #include "comms.h"
 #include "init.h"
 #include "timeout.h"
+#include "programTimer.h"
 
 void setup()
 {
@@ -31,6 +32,7 @@ void loop()
     process_command();
   }
   check_timeouts();
+  program_timer();
 }
 
 

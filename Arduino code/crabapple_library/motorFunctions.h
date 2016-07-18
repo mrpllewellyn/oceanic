@@ -4,7 +4,7 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-void query_motor(motor query, int index) {
+void query_motor(motor query, int index) { //this is whats returned from a query request
   Serial.print(F("motor"));
   Serial.println(index);
   Serial.println(query.Desc);

@@ -4,7 +4,7 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-void query_button(button query, int index) {
+void query_button(button query, int index) { //this is whats returned from a query request 
   Serial.print(F("button"));
   Serial.println(index);
   Serial.println(query.Desc);

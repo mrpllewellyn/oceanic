@@ -4,7 +4,7 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-void query_light(light query, int index) {
+void query_light(light query, int index) { //this is whats returned from a query request
   Serial.print(F("light"));
   Serial.println(index);
   Serial.println(query.Desc);

@@ -4,7 +4,7 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-#define CMD_BUFFER_SIZE 8
+#define CMD_BUFFER_SIZE 8 // how many commands to hold in a Q.  more commands = more memory used. 
 
 char SERVO_CMD = 'S';
 char MOTOR_CMD = 'M';
@@ -32,35 +32,38 @@ button buttondata[num_buttons];
 prog progdata[num_programs];
 void (*programPtrs[num_programs])(int index);
 
-void load_conf() {
-  //servos (min,max,home,pos values are in degrees)
+void load_conf() { // here we put the information about our different objects. not all of the object properties are exposed here, only the ones we may want to set at compile time.
+                    //this was done by putting the user important ones at the beginning of the struct and the runtime ones at the end.
+                    //those can be passed here too by declaring the rest of the struct, but they are things that dont need to be preconfigured so can remain null
+                    
+  //servos (min, max, home are in degrees). home is the default position of the servo. min and max are the bounds
   //pin,min,max,home,pos,timeout(ms), desc
-  servodata[0] = {9, 0, 180, 90, 0, 5000, F("R Wheel")}; 
-  servodata[1] = {10, 0, 180, 90, 0, 5000, F("F Wheel")}; 
-  servodata[2] = {11, 0, 180, 90, 0, 5000, F("B Wheel")}; 
-  servodata[3] = {12, 0, 180, 90, 0, 5000, F("L Wheel")};
+  servodata[0] = {9, 0, 180, 90, 5, F("R Wheel")}; 
+  servodata[1] = {10, 0, 180, 90, 5, F("F Wheel")}; 
+  servodata[2] = {11, 0, 180, 90, 5, F("B Wheel")}; 
+  servodata[3] = {12, 0, 180, 90, 5, F("L Wheel")};
   
-  //motors (limit and speed are values between 0-255. direction 0=backwards 1=fowards)
-  //pwm pin, direction pin1, pin2, speed, limit,direction,timeout(ms), desc
-  motordata[0] = {3, 4, 2, 0, 255, 1, 5000, F("R Motor")};
-  motordata[1] = {5, 8, 7, 0, 255, 1, 5000, F("L Motor")};
+  //motors (limitis a value between 0-255)
+  //pwm pin, direction pin1, pin2, speed_limit,timeout(ms), desc
+  motordata[0] = {3, 4, 2, 255, 5, F("R Motor")};
+  motordata[1] = {5, 8, 7, 255, 5, F("L Motor")};
 
   //lights (brightness 0-255)
-  //pin,default brightness, brightness, timeout(ms), desc
-  lightdata[0] = {A1, 0, 0, 5000, F("Blue LED")};
+  //pin, default brightness, timeout(ms), desc
+  lightdata[0] = {A1, 0, 5, F("Blue LED")};
 
   //buttons
-  //pin, state (boolean), timeout, desc
-  buttondata[0] = {A2, 0, 50, F("R bumper")};
-  buttondata[1] = {A3, 0, 50, F("L bumper")};
+  //pin, timeout, desc
+  buttondata[0] = {A2, 0.5, F("R bumper")};
+  buttondata[1] = {A3, 0.5, F("L bumper")};
 
   //programs
-  //state, timeout, desc
-  progdata[0] = {0, 5000, F("forward")};
-  progdata[1] = {0, 5000, F("reverse")};
-  progdata[2] = {0, 5000, F("turn L")};
-  progdata[3] = {0, 5000, F("turn R")};
-  progdata[4] = {0, 5000, F("bumper test")};
+  //timeout, desc
+  progdata[0] = {5, F("forward")};
+  progdata[1] = {5, F("reverse")};
+  progdata[2] = {5, F("turn L")};
+  progdata[3] = {5, F("turn R")};
+  progdata[4] = {5, F("test")};
 
 }
 

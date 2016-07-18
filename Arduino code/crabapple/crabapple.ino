@@ -2,7 +2,7 @@
 #include "structs.h" //defines data structures for each object type. commands are also stored in a struct.
 #include "conf.h" //configures number of obects of each type and sets their properties
 #include "query.h" //functions to query objects
-#include "commands.h" //this is where the command constructor, command Q and command processing live
+#include "interface.h" //this is where the command constructor, command Q and command processing live
 #include "customPrograms.h" //custom programs that can be called via commands
 #include "hardwareWrite.h"
 #include "watchdogs.h" //timer for calling programs while their state property is true. state property is set by commands and switched off by timeout.h or another command
@@ -29,6 +29,7 @@ void loop()
     process_command(); // then action it
   }
   watchdogs();
+  hardwareWrite();
 }
 
 

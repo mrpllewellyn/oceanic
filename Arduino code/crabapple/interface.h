@@ -1,5 +1,5 @@
-#ifndef commands_h
-#define commands_h
+#ifndef interface_h
+#define interface_h
 
 // include types & constants of Wiring core API
 #include <Arduino.h>
@@ -131,7 +131,6 @@ void doServo(int index, int value, char action) {
  */
 
 void process_command() {
-
   if (cmd_q[cmd_number].obj_type == MOTOR_CMD) {
     int value = cmd_q[cmd_number].value;
     doMotor(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
@@ -166,7 +165,6 @@ void process_command() {
   if (cmd_number > (CMD_BUFFER_SIZE - 1)) {
     cmd_number = 0;
   }
-
 }
 
 

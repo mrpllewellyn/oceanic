@@ -12,7 +12,7 @@ void hardwareWrite() {
 
   for (int i = 0; i < num_servos; i++) {
     if (servo_obj[i].do_me) {
-      servo_[i].write(servo_obj[i].Pos);
+      servo_[i].write(servo_obj[i].currentPos);
       servo_obj[i].do_me = false; //do_me done so do_me no more
     }
   }
@@ -27,7 +27,7 @@ void hardwareWrite() {
         digitalWrite(motor_obj[i].dirPin1, LOW); //set direction clockwise
         digitalWrite(motor_obj[i].dirPin2, HIGH);
       }
-      analogWrite(motor_obj[i].speedPin, motor_obj[i].Speed);
+      analogWrite(motor_obj[i].speedPin, motor_obj[i].currentSpeed);
       motor_obj[i].do_me = false; //do_me done so do_me no more
     }
   }

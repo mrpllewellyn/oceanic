@@ -51,9 +51,38 @@ void check_buttons() {
   }
 }
 
+void check_servo_positions() {
+  for (int i = 0; i < num_servos; i++) {
+    servo_obj[i].currentPos = servo_[i].read();
+
+    //wrap this up in code to change rate of servo position change
+    if (servo_obj[i].currentPos < servo_obj[i].targetPos) {
+      servo_obj[i].currentPos++;
+    }
+    if (servo_obj[i].currentPos > servo_obj[i].targetPos) {
+      servo_obj[i].currentPos--;
+    }
+  }
+}
+
+void check_motor_speed() {
+  for (int i = 0; i < num_motors; i++) {
+    
+    //wrap this up in code to change rate of motor speed change
+    if (motor_obj[i].currentSpeed < motor_obj[i].targetSpeed) {
+      motor_obj[i].currentSpeed++;
+    }
+    if (motor_obj[i].currentSpeed > motor_obj[i].targetSpeed) {
+      motor_obj[i].currentSpeed--;
+    }
+  }
+}
+
 void watchdogs() {
   check_timeouts();
   check_buttons();
+  check_servo_positions();
+  check_motor_speed();
 }
 
 #endif

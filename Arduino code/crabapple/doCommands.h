@@ -1,5 +1,5 @@
-#ifndef interface_h
-#define interface_h
+#ifndef doCommands_h
+#define doCommands_h
 
 // include types & constants of Wiring core API
 #include <Arduino.h>
@@ -99,7 +99,7 @@ void doMotor(int index, int value, char action) {
     }
     //setMotorDirection(motor_obj[index].Direction, motor_obj[index].dirPin1, motor_obj[index].dirPin2);
     if (value <= motor_obj[index].Limit && value >= 0) {
-      motor_obj[index].Speed = value;
+      motor_obj[index].targetSpeed = value;
      // driveMotor(value, motor_obj[index].speedPin);
       motor_obj[index].lastMillis = millis();
       motor_obj[index].do_me = true;
@@ -120,7 +120,7 @@ void doServo(int index, int value, char action) {
 
   if (action == DO_CMD) {
     if (value <= servo_obj[index].Max && value >= servo_obj[index].Min) {
-      servo_obj[index].Pos = value;
+      servo_obj[index].targetPos = value;
       //servo_[index].write(servo_obj[index].Pos);
       servo_obj[index].lastMillis = millis();
       servo_obj[index].do_me = true;
@@ -128,7 +128,6 @@ void doServo(int index, int value, char action) {
   }
 
   else if (action == QUERY_CMD) {
-    servo_obj[index].Pos = servo_[index].read();
     query_servo(index);
   }
 

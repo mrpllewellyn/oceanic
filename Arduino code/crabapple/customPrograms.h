@@ -22,7 +22,7 @@ void go_left(int i){} //prog2
 
 void go_right(int i){} //prog3
 
-void prog_test(int i){ //prog4
+void prgm_test(int i){ //prog4
 //  progcounter++;
 //  if (progcounter > 30000){
 //    int temp = (millis() - timebetweenloops);
@@ -34,6 +34,7 @@ void prog_test(int i){ //prog4
 //    timebetweenloops = millis();
 //    progcounter = 0;
 //  }
+
 } 
 
 

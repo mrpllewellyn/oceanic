@@ -7,51 +7,59 @@
 void query_button(int index) { //this is whats returned from a query request 
   Serial.print(F("button"));
   Serial.println(index);
-  Serial.println(buttondata[index].Desc);
-  Serial.println(buttondata[index].state);
-  Serial.println(buttondata[index].Timeout);
+  Serial.println(button_obj[index].Desc);
+  Serial.println(button_obj[index].state);
+  Serial.println();
+}
+
+void query_buzzer(int index) { //this is whats returned from a query request 
+  Serial.print(F("buzzer"));
+  Serial.println(index);
+  Serial.println(buzzer_obj[index].frequency);
+  Serial.println(buzzer_obj[index].state);
+  Serial.println(buzzer_obj[index].duration);
   Serial.println();
 }
 
 void query_prog(int index) { //this is whats returned from a query request
   Serial.print(F("program"));
   Serial.println(index);
-  Serial.println(progdata[index].Desc);
-  Serial.println(progdata[index].state);
-  Serial.println(progdata[index].Timeout);
+  Serial.println(prgm_obj[index].Desc);
+  Serial.println(prgm_obj[index].state);
+  Serial.println(prgm_obj[index].Timeout);
   Serial.println();
 }
 
 void query_light(int index) { //this is whats returned from a query request
   Serial.print(F("light"));
   Serial.println(index);
-  Serial.println(lightdata[index].Desc);
-  Serial.println(lightdata[index].default_brightness);
-  Serial.println(lightdata[index].brightness);
-  Serial.println(lightdata[index].Timeout);
+  Serial.println(light_obj[index].Desc);
+  Serial.println(light_obj[index].default_brightness);
+  Serial.println(light_obj[index].brightness);
+  Serial.println(light_obj[index].Timeout);
   Serial.println();
 }
 
 void query_motor(int index) { //this is whats returned from a query request
   Serial.print(F("motor"));
   Serial.println(index);
-  Serial.println(motordata[index].Desc);
-  Serial.println(motordata[index].Speed);
-  Serial.println(motordata[index].Direction);
-  Serial.println(motordata[index].Limit);
-  Serial.println(motordata[index].Timeout);
+  Serial.println(motor_obj[index].Desc);
+  Serial.println(motor_obj[index].Speed);
+  Serial.println(motor_obj[index].Direction);
+  Serial.println(motor_obj[index].Limit);
+  Serial.println(motor_obj[index].Timeout);
   Serial.println();
 }
 
 void query_servo(int index) {
   Serial.print(F("servo"));
   Serial.println(index);
-  Serial.println(servodata[index].Desc);
-  Serial.println(servodata[index].Min);
-  Serial.println(servodata[index].Max);
-  Serial.println(servodata[index].Home);
-  Serial.println(servodata[index].Pos);
-  Serial.println(servodata[index].Timeout);
+  Serial.println(servo_obj[index].Desc);
+  Serial.println(servo_obj[index].Min);
+  Serial.println(servo_obj[index].Max);
+  Serial.println(servo_obj[index].Home);
+  Serial.println(servo_obj[index].Pos);
+  Serial.println(servo_obj[index].Timeout);
   Serial.println();
 }
 
@@ -67,6 +75,9 @@ void query_all() {
   }
   for (int i = 0; i < num_buttons; i++) {
     query_button(i);
+  }
+  for (int i = 0; i < num_buzzers; i++) {
+    query_buzzer(i);
   }
   for (int i = 0; i < num_programs; i++) {
     query_prog(i);

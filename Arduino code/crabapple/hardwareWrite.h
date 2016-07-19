@@ -11,44 +11,51 @@ void hardwareWrite() {
 //we loop through objects of each type
 
   for (int i = 0; i < num_servos; i++) {
-    if (servodata[i].do_me) {
-      servo_[i].write(servodata[i].Pos);
-      servodata[i].do_me = false; //do_me done so do_me no more
+    if (servo_obj[i].do_me) {
+      servo_[i].write(servo_obj[i].Pos);
+      servo_obj[i].do_me = false; //do_me done so do_me no more
     }
   }
   
   for (int i = 0; i < num_motors; i++) {
-    if (motordata[i].do_me) {
-      if (motordata[i].Direction == 0) {
-        digitalWrite(motordata[i].dirPin1, HIGH); //set direction anticlockwise
-        digitalWrite(motordata[i].dirPin2, LOW);
+    if (motor_obj[i].do_me) {
+      if (motor_obj[i].Direction == 0) {
+        digitalWrite(motor_obj[i].dirPin1, HIGH); //set direction anticlockwise
+        digitalWrite(motor_obj[i].dirPin2, LOW);
       }
-      else if (motordata[i].Direction == 1) {
-        digitalWrite(motordata[i].dirPin1, LOW); //set direction clockwise
-        digitalWrite(motordata[i].dirPin2, HIGH);
+      else if (motor_obj[i].Direction == 1) {
+        digitalWrite(motor_obj[i].dirPin1, LOW); //set direction clockwise
+        digitalWrite(motor_obj[i].dirPin2, HIGH);
       }
-      analogWrite(motordata[i].speedPin, motordata[i].Speed);
-      motordata[i].do_me = false; //do_me done so do_me no more
+      analogWrite(motor_obj[i].speedPin, motor_obj[i].Speed);
+      motor_obj[i].do_me = false; //do_me done so do_me no more
     }
   }
   
   for (int i = 0; i < num_lights; i++) {
-    if (lightdata[i].do_me) {
-      analogWrite(lightdata[i].Pin, lightdata[i].brightness);
-      lightdata[i].do_me = false; //do_me done so do_me no more
+    if (light_obj[i].do_me) {
+      analogWrite(light_obj[i].Pin, light_obj[i].brightness);
+      light_obj[i].do_me = false; //do_me done so do_me no more
     }
   }
   
   for (int i = 0; i < num_buttons; i++) {
-    if (buttondata[i].do_me) {
+    if (button_obj[i].do_me) {
       //doButton(i, 0, DO_CMD);
-      buttondata[i].do_me = false; //do_me done so do_me no more
+      button_obj[i].do_me = false; //do_me done so do_me no more
     }  }
     
   for (int i = 0; i < num_programs; i++) {
-    if (progdata[i].do_me) {  
+    if (prgm_obj[i].do_me) {  
       (*programPtrs[i])(i); //calls the program at the index of `index` in the pointers array
-      progdata[i].do_me = false; //do_me done so do_me no more
+      prgm_obj[i].do_me = false; //do_me done so do_me no more
+    }
+  }
+
+  for (int i = 0; i < num_buzzers; i++) {
+    if (buzzer_obj[i].do_me) {  
+      tone(buzzer_obj[i].Pin, buzzer_obj[i].frequency, buzzer_obj[i].duration);
+      buzzer_obj[i].do_me = false; //do_me done so do_me no more
     }
   }
 }

@@ -45,15 +45,22 @@ struct light {
 
 struct button {
   byte Pin;
-  unsigned int Timeout;
   String Desc;
   byte rate; //seems unintuitive but this could be used in the button debounce code (which doesn't actually exist)
   boolean state;
-  unsigned long lastMillis;
   boolean do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
 };
 
-struct prog {
+struct buzzer {
+  byte Pin;
+  byte rate;
+  boolean state;
+  int frequency;
+  unsigned int duration;
+  boolean do_me;
+};
+
+struct prgm {
   unsigned int Timeout;
   String Desc;
   boolean state;

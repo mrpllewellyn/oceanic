@@ -20,16 +20,33 @@ String tmp_string;
 void doButton(int index, int value, char action) {
 
   if (action == DO_CMD) {
-
+    //nothing
   }
 
   else if (action == QUERY_CMD) {
-    buttondata[index].state = !(digitalRead(buttondata[index].Pin));
+    button_obj[index].state = !(digitalRead(button_obj[index].Pin));
     query_button(index);
   }
 
   else if (action == SETTIMEOUT_CMD) {
-    buttondata[index].Timeout = value;
+    //nothing 
+  }
+
+}
+
+void doBuzzer(int index, int value, char action) {
+
+  if (action == DO_CMD) {
+    buzzer_obj[index].frequency = value;
+    buzzer_obj[index].do_me = true;
+  }
+
+  else if (action == QUERY_CMD) {
+    query_buzzer(index);
+  }
+
+  else if (action == SETTIMEOUT_CMD) {
+    buzzer_obj[index].duration = value;
   }
 
 }
@@ -38,8 +55,8 @@ void doProgram(int index, int value, char action) {
   
   if (action == DO_CMD) {
     if (index < num_programs){
-      progdata[index].lastMillis = millis();
-      progdata[index].do_me = true;
+      prgm_obj[index].lastMillis = millis();
+      prgm_obj[index].do_me = true;
     }
   }
 
@@ -48,16 +65,16 @@ void doProgram(int index, int value, char action) {
   }
 
   else if (action == SETTIMEOUT_CMD) {
-    progdata[index].Timeout = value;
+    prgm_obj[index].Timeout = value;
   }
 }
 
 void doLight(int index, int value, char action) {
 
   if (action == DO_CMD) {
-    lightdata[index].brightness = value;
-    lightdata[index].lastMillis = millis();
-    lightdata[index].do_me = true;
+    light_obj[index].brightness = value;
+    light_obj[index].lastMillis = millis();
+    light_obj[index].do_me = true;
   }
 
   else if (action == QUERY_CMD) {
@@ -65,7 +82,7 @@ void doLight(int index, int value, char action) {
   }
 
   else if (action == SETTIMEOUT_CMD) {
-    lightdata[index].Timeout = value;
+    light_obj[index].Timeout = value;
   }
 
 }
@@ -74,18 +91,18 @@ void doMotor(int index, int value, char action) {
 
   if (action == DO_CMD) {
     if (value < 0) {
-      motordata[index].Direction = 0; //go backwards
+      motor_obj[index].Direction = 0; //go backwards
       value = value * -1;
     }
     else {
-      motordata[index].Direction = 1; //go forwards
+      motor_obj[index].Direction = 1; //go forwards
     }
-    //setMotorDirection(motordata[index].Direction, motordata[index].dirPin1, motordata[index].dirPin2);
-    if (value <= motordata[index].Limit && value >= 0) {
-      motordata[index].Speed = value;
-     // driveMotor(value, motordata[index].speedPin);
-      motordata[index].lastMillis = millis();
-      motordata[index].do_me = true;
+    //setMotorDirection(motor_obj[index].Direction, motor_obj[index].dirPin1, motor_obj[index].dirPin2);
+    if (value <= motor_obj[index].Limit && value >= 0) {
+      motor_obj[index].Speed = value;
+     // driveMotor(value, motor_obj[index].speedPin);
+      motor_obj[index].lastMillis = millis();
+      motor_obj[index].do_me = true;
     }
   }
 
@@ -94,7 +111,7 @@ void doMotor(int index, int value, char action) {
   }
 
   else if (action == SETTIMEOUT_CMD) {
-    motordata[index].Timeout = value;
+    motor_obj[index].Timeout = value;
   }
 
 }
@@ -102,21 +119,21 @@ void doMotor(int index, int value, char action) {
 void doServo(int index, int value, char action) {
 
   if (action == DO_CMD) {
-    if (value <= servodata[index].Max && value >= servodata[index].Min) {
-      servodata[index].Pos = value;
-      //servo_[index].write(servodata[index].Pos);
-      servodata[index].lastMillis = millis();
-      servodata[index].do_me = true;
+    if (value <= servo_obj[index].Max && value >= servo_obj[index].Min) {
+      servo_obj[index].Pos = value;
+      //servo_[index].write(servo_obj[index].Pos);
+      servo_obj[index].lastMillis = millis();
+      servo_obj[index].do_me = true;
     }
   }
 
   else if (action == QUERY_CMD) {
-    servodata[index].Pos = servo_[index].read();
+    servo_obj[index].Pos = servo_[index].read();
     query_servo(index);
   }
 
   else if (action == SETTIMEOUT_CMD) {
-    servodata[index].Timeout = value;
+    servo_obj[index].Timeout = value;
   }
 
 }
@@ -149,6 +166,11 @@ void process_command() {
   else if (cmd_q[cmd_number].obj_type == BUTTON_CMD) {
     int value = cmd_q[cmd_number].value;
     doButton(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+  }
+
+  else if (cmd_q[cmd_number].obj_type == BUZZER_CMD) {
+    int value = cmd_q[cmd_number].value;
+    doBuzzer(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
   }
 
   else if (cmd_q[cmd_number].obj_type == PROG_CMD) {

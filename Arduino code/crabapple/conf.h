@@ -16,6 +16,7 @@ const char PROG_CMD = 'P';
 const char QUERY_CMD = '?';
 const char DO_CMD = ':';
 const char SETTIMEOUT_CMD = 't';
+const char SETRATE_CMD = 'r';
 const char END_OF_CMD = '\n';
 
 const byte num_servos = 4;
@@ -47,9 +48,9 @@ void load_conf() { // here we put the information about our different objects. n
   servo_obj[3] = {12, 0, 180, 90, 5, F("L Wheel")};
   
   //motors (limitis a value between 0-255)
-  //pwm pin, direction pin1, pin2, speed_limit,timeout(s), description
-  motor_obj[0] = {3, 4, 2, 255, 5, F("R Motor")};
-  motor_obj[1] = {5, 8, 7, 255, 5, F("L Motor")};
+  //pwm pin, direction pin1, pin2, min speed, max speed,timeout(s), description
+  motor_obj[0] = {3, 4, 2, 60, 255, 5, F("R Motor")};
+  motor_obj[1] = {5, 8, 7, 60, 255, 5, F("L Motor")};
 
   //lights (brightness 0-255)
   //pin, default brightness, timeout(s), description

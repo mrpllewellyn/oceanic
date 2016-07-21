@@ -4,7 +4,6 @@
 #include "query.h" //functions to query objects
 #include "doCommands.h" //this is where the command constructor, command Q and command processing live
 #include "customPrograms.h" //custom programs that can be called via commands
-#include "hardwareWrite.h"
 #include "watchdogs.h" //timer for calling programs while their state property is true. state property is set by commands and switched off by timeout.h or another command
 #include "init.h" //has code for attaching servos and defines custom programs, pin mode stuff can go here to
 
@@ -29,7 +28,6 @@ void loop()
     process_command(); // then action it
   }
   watchdogs();
-  hardwareWrite();
 }
 
 

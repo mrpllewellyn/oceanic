@@ -11,9 +11,9 @@ struct servo { // struct for servo object type
   byte Home;    //servo default position
   unsigned int Timeout; //timeout
   String Desc; //object description
+  byte rate; //the speed the servo moves slowest 1-255 fastest, however rate of 0 = run as fast as I can 
   byte currentPos;     //servo position
   byte targetPos;
-  byte rate; //the speed the servo moves min0-255max
   unsigned long lastMillis; //record of when unit was last run
   boolean do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
 };
@@ -22,10 +22,11 @@ struct motor {
   byte speedPin;      // the number of the pwm pin
   byte dirPin1;
   byte dirPin2;
-  byte Limit;
+  byte Min;
+  byte Max;
   unsigned int Timeout;
   String Desc;
-  byte rate; //the (de)accell of the motor min 0 max 255
+  byte rate; //the (de)accell of the motor slowest 1 fastest 255, however rate of 0 = run as fast as I can
   boolean Direction;
   byte currentSpeed;
   byte targetSpeed;
@@ -47,14 +48,12 @@ struct light {
 struct button {
   byte Pin;
   String Desc;
-  byte rate; //seems unintuitive but this could be used in the button debounce code (which doesn't actually exist)
   boolean state;
   boolean do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
 };
 
 struct buzzer {
   byte Pin;
-  byte rate;
   boolean state;
   int frequency;
   unsigned int duration;

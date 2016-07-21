@@ -46,8 +46,10 @@ void query_motor(int index) { //this is whats returned from a query request
   Serial.println(motor_obj[index].Desc);
   Serial.println(motor_obj[index].currentSpeed);
   Serial.println(motor_obj[index].Direction);
-  Serial.println(motor_obj[index].Limit);
+  Serial.println(motor_obj[index].Min);
+  Serial.println(motor_obj[index].Max);
   Serial.println(motor_obj[index].Timeout);
+  Serial.println(motor_obj[index].rate);
   Serial.println();
 }
 
@@ -60,6 +62,7 @@ void query_servo(int index) {
   Serial.println(servo_obj[index].Home);
   Serial.println(servo_obj[index].currentPos);
   Serial.println(servo_obj[index].Timeout);
+  Serial.println(servo_obj[index].rate);
   Serial.println();
 }
 

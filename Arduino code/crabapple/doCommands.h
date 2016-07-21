@@ -73,7 +73,6 @@ void doLight(int index, int value, char action) {
 
   if (action == DO_CMD) {
     light_obj[index].brightness = value;
-    light_obj[index].lastMillis = millis();
     light_obj[index].do_me = true;
   }
 
@@ -98,11 +97,19 @@ void doMotor(int index, int value, char action) {
       motor_obj[index].Direction = 1; //go forwards
     }
     //setMotorDirection(motor_obj[index].Direction, motor_obj[index].dirPin1, motor_obj[index].dirPin2);
-    if (value <= motor_obj[index].Limit && value >= 0) {
+    if (value <= motor_obj[index].Max && value > motor_obj[index].Min) {
       motor_obj[index].targetSpeed = value;
      // driveMotor(value, motor_obj[index].speedPin);
-      motor_obj[index].lastMillis = millis();
-      motor_obj[index].do_me = true;
+     // motor_obj[index].do_me = true;
+    }
+    if (value == 0) {
+      motor_obj[index].targetSpeed = 0;
+    }
+    else if (value < motor_obj[index].Min) {
+      motor_obj[index].targetSpeed = motor_obj[index].Min;
+    }
+    else if (value > motor_obj[index].Max) {
+      motor_obj[index].targetSpeed = motor_obj[index].Max;      
     }
   }
 
@@ -114,6 +121,10 @@ void doMotor(int index, int value, char action) {
     motor_obj[index].Timeout = value;
   }
 
+  else if (action == SETRATE_CMD) {
+    motor_obj[index].rate = value;
+  }
+
 }
 
 void doServo(int index, int value, char action) {
@@ -122,8 +133,16 @@ void doServo(int index, int value, char action) {
     if (value <= servo_obj[index].Max && value >= servo_obj[index].Min) {
       servo_obj[index].targetPos = value;
       //servo_[index].write(servo_obj[index].Pos);
-      servo_obj[index].lastMillis = millis();
-      servo_obj[index].do_me = true;
+      //servo_obj[index].do_me = true;
+    }
+    if (value == 0) {
+      servo_obj[index].targetPos = 0;
+    }
+    else if (value < servo_obj[index].Min) {
+      servo_obj[index].targetPos = servo_obj[index].Min;
+    }
+    else if (value > servo_obj[index].Max) {
+      servo_obj[index].targetPos = servo_obj[index].Max;      
     }
   }
 
@@ -133,6 +152,11 @@ void doServo(int index, int value, char action) {
 
   else if (action == SETTIMEOUT_CMD) {
     servo_obj[index].Timeout = value;
+  }
+
+
+  else if (action == SETRATE_CMD) {
+    servo_obj[index].rate = value;
   }
 
 }
@@ -215,7 +239,7 @@ void cmd_constructor(char inChar) { //construct commands from byte-by-byte input
       }
       break;
     case 2:
-      if (inChar == DO_CMD || inChar == QUERY_CMD || inChar == SETTIMEOUT_CMD) {
+      if (inChar == DO_CMD || inChar == QUERY_CMD || inChar == SETTIMEOUT_CMD || inChar == SETRATE_CMD) {
         cmd_input.obj_number = tmp_string.toInt();
         tmp_string = "";
         cmd_input.action_type = inChar;

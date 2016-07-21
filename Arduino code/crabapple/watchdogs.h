@@ -53,36 +53,112 @@ void check_buttons() {
 
 void check_servo_positions() {
   for (int i = 0; i < num_servos; i++) {
-    servo_obj[i].currentPos = servo_[i].read();
-
-    //wrap this up in code to change rate of servo position change
-    if (servo_obj[i].currentPos < servo_obj[i].targetPos) {
-      servo_obj[i].currentPos++;
-    }
-    if (servo_obj[i].currentPos > servo_obj[i].targetPos) {
-      servo_obj[i].currentPos--;
+    //servo_obj[i].currentPos = servo_[i].read();
+    if (servo_obj[i].lastMillis < (millis() - (255 / servo_obj[i].rate))) {
+      if (servo_obj[i].currentPos < servo_obj[i].targetPos) {
+        servo_obj[i].currentPos++;
+        if (servo_obj[i].currentPos < servo_obj[i].Min) {
+          servo_obj[i].currentPos = servo_obj[i].Min;
+        }
+        servo_obj[i].do_me = true;
+      }
+      if (servo_obj[i].currentPos > servo_obj[i].targetPos) {
+        servo_obj[i].currentPos--;
+        if (servo_obj[i].currentPos < servo_obj[i].Min) {
+          servo_obj[i].currentPos = 0;
+        }
+        servo_obj[i].do_me = true;
+      }     
     }
   }
 }
 
 void check_motor_speed() {
   for (int i = 0; i < num_motors; i++) {
-    
-    //wrap this up in code to change rate of motor speed change
-    if (motor_obj[i].currentSpeed < motor_obj[i].targetSpeed) {
-      motor_obj[i].currentSpeed++;
+    if (motor_obj[i].lastMillis < (millis() - (255 / motor_obj[i].rate))) {
+      if (motor_obj[i].currentSpeed < motor_obj[i].targetSpeed) {
+        motor_obj[i].currentSpeed++;
+        if (motor_obj[i].currentSpeed < motor_obj[i].Min) {
+          motor_obj[i].currentSpeed = motor_obj[i].Min;
+        }
+        motor_obj[i].do_me = true;
+      }
+      if (motor_obj[i].currentSpeed > motor_obj[i].targetSpeed) {
+        motor_obj[i].currentSpeed--;
+        if (motor_obj[i].currentSpeed < motor_obj[i].Min) {
+          motor_obj[i].currentSpeed = 0;
+        }
+        motor_obj[i].do_me = true;
+      }     
     }
-    if (motor_obj[i].currentSpeed > motor_obj[i].targetSpeed) {
-      motor_obj[i].currentSpeed--;
+  }
+}
+
+void hardwareWrite() {
+
+  //we look at the do_me flag of each object and do stuff to the objects that have it flagged. we then unflag it.
+
+//we loop through objects of each type
+
+  for (int i = 0; i < num_servos; i++) {
+    if (servo_obj[i].do_me) {
+      servo_[i].write(servo_obj[i].currentPos);
+      servo_obj[i].lastMillis = millis();
+      servo_obj[i].do_me = false; //do_me done so do_me no more
+    }
+  }
+  
+  for (int i = 0; i < num_motors; i++) {
+    if (motor_obj[i].do_me) {
+      if (motor_obj[i].Direction == 0) {
+        digitalWrite(motor_obj[i].dirPin1, HIGH); //set direction anticlockwise
+        digitalWrite(motor_obj[i].dirPin2, LOW);
+      }
+      else if (motor_obj[i].Direction == 1) {
+        digitalWrite(motor_obj[i].dirPin1, LOW); //set direction clockwise
+        digitalWrite(motor_obj[i].dirPin2, HIGH);
+      }
+      analogWrite(motor_obj[i].speedPin, motor_obj[i].currentSpeed);
+      motor_obj[i].lastMillis = millis();
+      motor_obj[i].do_me = false; //do_me done so do_me no more
+    }
+  }
+  
+  for (int i = 0; i < num_lights; i++) {
+    if (light_obj[i].do_me) {
+      analogWrite(light_obj[i].Pin, light_obj[i].brightness);
+      light_obj[i].lastMillis = millis();
+      light_obj[i].do_me = false; //do_me done so do_me no more
+    }
+  }
+  
+  for (int i = 0; i < num_buttons; i++) {
+    if (button_obj[i].do_me) {
+      //doButton(i, 0, DO_CMD);
+      button_obj[i].do_me = false; //do_me done so do_me no more
+    }  }
+    
+  for (int i = 0; i < num_programs; i++) {
+    if (prgm_obj[i].do_me) {  
+      (*programPtrs[i])(i); //calls the program at the index of `index` in the pointers array
+      prgm_obj[i].do_me = false; //do_me done so do_me no more
+    }
+  }
+
+  for (int i = 0; i < num_buzzers; i++) {
+    if (buzzer_obj[i].do_me) {  
+      tone(buzzer_obj[i].Pin, buzzer_obj[i].frequency, buzzer_obj[i].duration);
+      buzzer_obj[i].do_me = false; //do_me done so do_me no more
     }
   }
 }
 
 void watchdogs() {
-  check_timeouts();
   check_buttons();
   check_servo_positions();
   check_motor_speed();
+  hardwareWrite();
+  check_timeouts();
 }
 
 #endif

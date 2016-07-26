@@ -4,6 +4,23 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
+typedef enum obj_state {
+  DONE,
+  DO,
+  DOING
+};
+extern uint8_t obj_state;
+
+
+
+struct cmd {
+  char obj_type;
+  byte obj_number;
+  char action_type;
+  int value;
+  boolean pending;
+};
+
 struct servo { // struct for servo object type
   byte Pin;      // the number of the servo pin
   byte Min;     //servo min allowed position
@@ -15,7 +32,7 @@ struct servo { // struct for servo object type
   byte currentPos;     //servo position
   byte targetPos;
   unsigned long lastMillis; //record of when unit was last run
-  boolean do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
+  enum obj_state do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
 };
 
 struct motor {
@@ -31,7 +48,7 @@ struct motor {
   byte currentSpeed;
   byte targetSpeed;
   unsigned long lastMillis;
-  boolean do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
+  enum obj_state do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
 };
 
 struct light {
@@ -41,38 +58,30 @@ struct light {
   String Desc;
   byte brightness;
   unsigned long lastMillis;
-  boolean do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
+  enum obj_state do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
 
 };
 
 struct button {
   byte Pin;
   String Desc;
-  boolean state;
-  boolean do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
+  enum obj_state do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
 };
 
 struct buzzer {
   byte Pin;
-  boolean state;
   int frequency;
   unsigned int duration;
-  boolean do_me;
+  enum obj_state do_me;
 };
 
 struct prgm {
   unsigned int Timeout;
   String Desc;
-  boolean state;
   unsigned long lastMillis;
-  boolean do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
+  enum obj_state do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
 };
 
-struct cmd {
-  char obj_type;
-  byte obj_number;
-  char action_type;
-  int value;
-};
+
 
 #endif

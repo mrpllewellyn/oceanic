@@ -1,4 +1,5 @@
 #include <Servo.h> 
+
 #include "structs.h" //defines data structures for each object type. commands are also stored in a struct.
 #include "conf.h" //configures number of obects of each type and sets their properties
 #include "query.h" //functions to query objects
@@ -16,7 +17,7 @@ void setup()
 }
 
 void serialEvent() {
-  while (Serial.available() && cmds_pending < CMD_BUFFER_SIZE) { //while serial is available and while command Q is not full
+  while (Serial.available()) { //while serial is available and while command Q is not full
     // get the new byte:
     cmd_constructor((char)Serial.read()); //send each character of input to the command constructor. this creates valid commands than can be processed.
   }
@@ -24,8 +25,10 @@ void serialEvent() {
 
 void loop()
 {
-  if (cmds_pending > 0) { //if there is a command to do
-    process_command(); // then action it
+  for (int i = 0; i <= CMD_BUFFER_SIZE; i++) {
+    if (cmd_q[i].pending) {
+      process_command(i);
+    }
   }
   watchdogs();
 }

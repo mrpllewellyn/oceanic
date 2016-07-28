@@ -31,7 +31,7 @@ struct servo { // struct for servo object type
   byte currentPos;     //servo position
   byte targetPos;
   unsigned long lastMillis; //record of when unit was last run
-  boolean isActive;
+  boolean doMe;
   boolean isLocked;
   
 };
@@ -49,7 +49,7 @@ struct motor {
   byte currentSpeed;
   byte targetSpeed;
   unsigned long lastMillis;
-  boolean isActive;
+  boolean doMe;
   boolean isLocked;
 };
 
@@ -60,14 +60,14 @@ struct light {
   String Desc;
   byte brightness;
   unsigned long lastMillis;
-  boolean isActive;
+  boolean doMe;
   boolean isLocked;
 };
 
 struct button {
   byte Pin;
   String Desc;
-  boolean isActive;
+  boolean doMe;
 };
 
 struct buzzer {
@@ -75,7 +75,7 @@ struct buzzer {
   int frequency;
   unsigned int duration;
   unsigned long lastMillis;  
-  boolean isActive;
+  boolean doMe;
   boolean isLocked;
 };
 
@@ -83,7 +83,7 @@ struct prgm {
   unsigned int Timeout;
   String Desc;
   unsigned long lastMillis;
-  boolean isActive;
+  boolean doMe;
   boolean isLocked;
 };
 

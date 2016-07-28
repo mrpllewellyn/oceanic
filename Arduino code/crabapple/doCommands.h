@@ -35,7 +35,7 @@ void doBuzzer(int index, int value, char action) {
 
   if (action == DO_CMD) {
     buzzer_obj[index].frequency = value;
-    buzzer_obj[index].isActive = true;
+    buzzer_obj[index].doMe = true;
   }
 
   else if (action == QUERY_CMD) {
@@ -53,7 +53,7 @@ void doProgram(int index, int value, char action) {
   if (action == DO_CMD) {
     if (index < num_programs){
       prgm_obj[index].lastMillis = millis();
-      prgm_obj[index].isActive = true;
+      prgm_obj[index].doMe = true;
     }
   }
 
@@ -71,7 +71,7 @@ void doLight(int index, int value, char action) {
   if (action == DO_CMD && light_obj[index].isLocked == false) {
     Serial.println(F("doing light..."));
     light_obj[index].brightness = value;
-    light_obj[index].isActive = true;
+    light_obj[index].doMe = true;
     light_obj[index].isLocked = true;
   }
 
@@ -86,8 +86,8 @@ void doLight(int index, int value, char action) {
   else if (action == RESET_CMD) {
     light_obj[index].brightness = light_obj[index].default_brightness;    
     //now delete any commands for this object in the Q
-    //but skip this step if value = 0
-    if (value = 0) {
+
+    if (value != 1) {
     for (int i = 0; i < CMD_BUFFER_SIZE; i++) {
       if (cmd_q[i].obj_type == LIGHT_CMD && cmd_q[i].obj_number == index) {
         cmd_q[i].obj_type = 0;
@@ -95,7 +95,7 @@ void doLight(int index, int value, char action) {
     }      
     }
 
-    light_obj[index].isActive = true;    
+    light_obj[index].doMe = true;    
     light_obj[index].isLocked = false;
   }
 
@@ -141,14 +141,17 @@ void doMotor(int index, int value, char action) {
   }
 
   else if (action == RESET_CMD) {
-    motor_obj[index].rate = 0;    
     motor_obj[index].targetSpeed = 0;
     //now delete any commands for this object in the Q
+    //but skip this step if value != 1
+    if (value != 1) {
     for (int i = 0; i < CMD_BUFFER_SIZE; i++) {
       if (cmd_q[i].obj_type == MOTOR_CMD && cmd_q[i].obj_number == index) {
         cmd_q[i].obj_type = 0;
       }
     }
+    }
+    motor_obj[index].doMe = true;
     motor_obj[index].isLocked = false;
   }
 
@@ -219,8 +222,7 @@ void process_command(int cmd_number) {
       }
       else {
         cmd_q[cmd_number].obj_type = 0;
-        int value = cmd_q[cmd_number].value;
-        doLight(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+        doLight(cmd_q[cmd_number].obj_number, cmd_q[cmd_number].value, cmd_q[cmd_number].action_type);
       }
   }
 
@@ -267,7 +269,7 @@ void addCmdtoQ() { //add command to command Q
   Serial.println(F("added to Q"));
   q_counter++;
   }
-  else if (used_slots = CMD_BUFFER_SIZE) {
+  else if (used_slots = (CMD_BUFFER_SIZE - 1)) {
     Serial.println(F("command Q full!"));
   }
   else if (cmd_q[q_counter].obj_type != 0) { //else move to the next slot and try again

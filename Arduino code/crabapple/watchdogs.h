@@ -9,7 +9,7 @@ void check_timeouts() {
     if ((millis() - servo_obj[i].lastMillis) > ((unsigned long) servo_obj[i].Timeout * 1000)) { //timeouts are stored in seconds so need to be multiplied by 1000 to make milliseconds
       doServo(i, servo_obj[i].Home, DO_CMD);                                                  //the timeout vars are temporalily 'cast' as unsigned long to accommodate the size
       servo_obj[i].isLocked = false;
-      servo_obj[i].isActive = false;
+      servo_obj[i].doMe = false;
     }//if a servo timesout then it returns to its home position
   }
 
@@ -44,7 +44,7 @@ void check_timeouts() {
 
   for (int i = 0; i < num_programs; i++) {
     if ((millis() - prgm_obj[i].lastMillis) > ((unsigned long) prgm_obj[i].Timeout * 1000)) {
-      prgm_obj[i].isActive = false;
+      prgm_obj[i].doMe = false;
       prgm_obj[i].isLocked = false;      
     } 
   } 
@@ -53,13 +53,13 @@ void check_timeouts() {
 void check_buttons() {
   for (int i = 0; i < num_buttons; i++) { //no need to time out buttons at the moment
     if (!(digitalRead(button_obj[i].Pin))){
-      button_obj[i].isActive = true;
+      button_obj[i].doMe = true;
       Serial.print(F("button:"));
       Serial.print(i);
       Serial.println(F(" pressed"));
     }
     else {
-      button_obj[i].isActive = false;
+      button_obj[i].doMe = false;
     }
   }
 }
@@ -73,14 +73,14 @@ void check_servo_positions() {
         if (servo_obj[i].currentPos > servo_obj[i].Max) {
           servo_obj[i].currentPos = servo_obj[i].Max;
         }
-        //servo_obj[i].isActive = true;
+        //servo_obj[i].doMe = true;
       }
       if (servo_obj[i].currentPos > servo_obj[i].targetPos) {
         servo_obj[i].currentPos--;
         if (servo_obj[i].currentPos < servo_obj[i].Min) {
           servo_obj[i].currentPos =  servo_obj[i].Min;
         }
-        //servo_obj[i].isActive = true;
+        //servo_obj[i].doMe = true;
       }     
     }
   }
@@ -115,7 +115,7 @@ void hardwareWrite() {
 //we loop through objects of each type
 
   for (int i = 0; i < num_servos; i++) {
-    if (servo_obj[i].isActive == true) {
+    if (servo_obj[i].doMe == true) {
       servo_[i].write(servo_obj[i].currentPos);
       servo_obj[i].lastMillis = millis();
       servo_obj[i].isLocked = true; 
@@ -123,7 +123,7 @@ void hardwareWrite() {
   }
   
   for (int i = 0; i < num_motors; i++) {
-    if (motor_obj[i].isActive == true) {
+    if (motor_obj[i].doMe == true) {
       if (motor_obj[i].Direction == 0) {
         digitalWrite(motor_obj[i].dirPin1, HIGH); //set direction anticlockwise
         digitalWrite(motor_obj[i].dirPin2, LOW);
@@ -134,37 +134,37 @@ void hardwareWrite() {
       }
       analogWrite(motor_obj[i].speedPin, motor_obj[i].currentSpeed);
       motor_obj[i].lastMillis = millis();
-      motor_obj[i].isActive = false;
+      motor_obj[i].doMe = false;
       motor_obj[i].isLocked = true; 
     }
   }
   
   for (int i = 0; i < num_lights; i++) {
-    if (light_obj[i].isActive == true) {
+    if (light_obj[i].doMe == true) {
       analogWrite(light_obj[i].Pin, light_obj[i].brightness);
       light_obj[i].lastMillis = millis();
-      light_obj[i].isActive = false;      
+      light_obj[i].doMe = false;      
     }
   }
   
 //  for (int i = 0; i < num_buttons; i++) {
-//    if (button_obj[i].isActive == true) {
+//    if (button_obj[i].doMe == true) {
 //      //doButton(i, 0, DO_CMD);
 //      button_obj[i].isLocked = true;
 //    }  }
     
   for (int i = 0; i < num_programs; i++) {
-    if (prgm_obj[i].isActive == true) {  
+    if (prgm_obj[i].doMe == true) {  
       (*programPtrs[i])(i); //calls the program at the index of `index` in the pointers array
       prgm_obj[i].isLocked = true; 
     }
   }
 
   for (int i = 0; i < num_buzzers; i++) {
-    if (buzzer_obj[i].isActive == true) {  
+    if (buzzer_obj[i].doMe == true) {  
       tone(buzzer_obj[i].Pin, buzzer_obj[i].frequency, buzzer_obj[i].duration);
       buzzer_obj[i].lastMillis = millis();
-      buzzer_obj[i].isActive = false; 
+      buzzer_obj[i].doMe = false; 
     }
   }
 }

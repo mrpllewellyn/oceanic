@@ -4,12 +4,12 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-typedef enum obj_state {
-  DONE,
-  DO,
-  DOING
-};
-extern uint8_t obj_state;
+//typedef enum obj_state {
+//  DONE,
+//  DO,
+//  DOING
+//};
+//extern uint8_t obj_state;
 
 
 
@@ -18,7 +18,6 @@ struct cmd {
   byte obj_number;
   char action_type;
   int value;
-  boolean pending;
 };
 
 struct servo { // struct for servo object type
@@ -32,7 +31,9 @@ struct servo { // struct for servo object type
   byte currentPos;     //servo position
   byte targetPos;
   unsigned long lastMillis; //record of when unit was last run
-  enum obj_state do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
+  boolean isActive;
+  boolean isLocked;
+  
 };
 
 struct motor {
@@ -48,7 +49,8 @@ struct motor {
   byte currentSpeed;
   byte targetSpeed;
   unsigned long lastMillis;
-  enum obj_state do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
+  boolean isActive;
+  boolean isLocked;
 };
 
 struct light {
@@ -58,28 +60,31 @@ struct light {
   String Desc;
   byte brightness;
   unsigned long lastMillis;
-  enum obj_state do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
-
+  boolean isActive;
+  boolean isLocked;
 };
 
 struct button {
   byte Pin;
   String Desc;
-  enum obj_state do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
+  boolean isActive;
 };
 
 struct buzzer {
   byte Pin;
   int frequency;
   unsigned int duration;
-  enum obj_state do_me;
+  unsigned long lastMillis;  
+  boolean isActive;
+  boolean isLocked;
 };
 
 struct prgm {
   unsigned int Timeout;
   String Desc;
   unsigned long lastMillis;
-  enum obj_state do_me; //flag that gets picked up in our main loop and tells the code that this object needs updating
+  boolean isActive;
+  boolean isLocked;
 };
 
 

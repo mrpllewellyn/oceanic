@@ -25,8 +25,10 @@ void serialEvent() {
 
 void loop()
 {
-  for (int i = 0; i <= CMD_BUFFER_SIZE; i++) {
-    if (cmd_q[i].pending) {
+  for (int i = 0; i < CMD_BUFFER_SIZE; i++) {
+    if (cmd_q[i].obj_type != 0) {
+      Serial.println(i);
+      Serial.println(F("command processed"));
       process_command(i);
     }
   }

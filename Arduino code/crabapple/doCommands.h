@@ -35,7 +35,7 @@ void doBuzzer(int index, int value, char action) {
 
   if (action == DO_CMD) {
     buzzer_obj[index].frequency = value;
-    buzzer_obj[index].do_me = DO;
+    buzzer_obj[index].isActive = true;
   }
 
   else if (action == QUERY_CMD) {
@@ -53,7 +53,7 @@ void doProgram(int index, int value, char action) {
   if (action == DO_CMD) {
     if (index < num_programs){
       prgm_obj[index].lastMillis = millis();
-      prgm_obj[index].do_me = DO;
+      prgm_obj[index].isActive = true;
     }
   }
 
@@ -69,8 +69,9 @@ void doProgram(int index, int value, char action) {
 void doLight(int index, int value, char action) {
 
   if (action == DO_CMD) {
+    Serial.println(F("doing light..."));
     light_obj[index].brightness = value;
-    light_obj[index].do_me = DO;
+    light_obj[index].isActive = true;
   }
 
   else if (action == QUERY_CMD) {
@@ -168,72 +169,82 @@ void doServo(int index, int value, char action) {
  */
 
 void process_command(int cmd_number) {
+  Serial.println(F("processing cmd..."));
   if (cmd_q[cmd_number].obj_type == MOTOR_CMD) {
-    if (motor_obj[cmd_q[cmd_number].obj_number].do_me == DONE) {
+    if (motor_obj[cmd_q[cmd_number].obj_number].isLocked == false || bypassQ) {
       int value = cmd_q[cmd_number].value;
       doMotor(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
-      cmd_q[cmd_number].pending = false;
+      cmd_q[cmd_number].obj_type = 0;
     }
   }
 
   else if (cmd_q[cmd_number].obj_type == SERVO_CMD) {
-    if (servo_obj[cmd_q[cmd_number].obj_number].do_me == DONE) {
+    if (servo_obj[cmd_q[cmd_number].obj_number].isLocked == false || bypassQ) {
       int value = cmd_q[cmd_number].value;
       doServo(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
-      cmd_q[cmd_number].pending = false;
+      cmd_q[cmd_number].obj_type = 0;
     }
   }
 
   else if (cmd_q[cmd_number].obj_type == LIGHT_CMD) {
-    if (light_obj[cmd_q[cmd_number].obj_number].do_me == DONE) {
+    if (light_obj[cmd_q[cmd_number].obj_number].isLocked == false || bypassQ) {
       int value = cmd_q[cmd_number].value;
       doLight(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
-      cmd_q[cmd_number].pending = false;
+      cmd_q[cmd_number].obj_type = 0;
+      light_obj[cmd_q[cmd_number].obj_number].isLocked = true;
     }
   }
 
   else if (cmd_q[cmd_number].obj_type == BUTTON_CMD) {
-    if (button_obj[cmd_q[cmd_number].obj_number].do_me == DONE) {
       int value = cmd_q[cmd_number].value;
       doButton(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
-      cmd_q[cmd_number].pending = false;
-    }
+      cmd_q[cmd_number].obj_type = 0;
   }
 
   else if (cmd_q[cmd_number].obj_type == BUZZER_CMD) {
-    if (buzzer_obj[cmd_q[cmd_number].obj_number].do_me == DONE) {
+    if (buzzer_obj[cmd_q[cmd_number].obj_number].isLocked == false || bypassQ) {
       int value = cmd_q[cmd_number].value;
       doBuzzer(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
-      cmd_q[cmd_number].pending = false;
+      cmd_q[cmd_number].obj_type = 0;
+      buzzer_obj[cmd_q[cmd_number].obj_number].isLocked = true;
     }
   }
 
   else if (cmd_q[cmd_number].obj_type == PROG_CMD) {
-    if (prgm_obj[cmd_q[cmd_number].obj_number].do_me == DONE) {
+    if (prgm_obj[cmd_q[cmd_number].obj_number].isLocked == false || bypassQ) {
       int value = cmd_q[cmd_number].value;
       doProgram(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
-      cmd_q[cmd_number].pending = false;
+      cmd_q[cmd_number].obj_type = 0;
     }
   }
 
   else {
     Serial.println(F("Command type not recognised"));
+    cmd_q[cmd_number].obj_type = 0;
   }
 
 }
 
 
 void addCmdtoQ() { //add command to command Q
+  int used_slots = 0;
+  beginning:
   if (q_counter > (CMD_BUFFER_SIZE - 1)) {
     q_counter = 0;
   }  
-  if (cmd_q[q_counter].pending == false) {
+  if (cmd_q[q_counter].obj_type == 0) { //if the current slot in the q is of type null then write command to this slot
   cmd_q[q_counter] = cmd_input;
+  Serial.println(q_counter);
+  Serial.println(F("added to Q"));
   q_counter++;
   }
-  else if (cmd_q[q_counter].pending) {
+  else if (used_slots = CMD_BUFFER_SIZE) {
+    Serial.println(F("command Q full!"));
+  }
+  else if (cmd_q[q_counter].obj_type != 0) { //else move to the next slot and try again
     q_counter++;
-    addCmdtoQ();
+    used_slots++;
+    goto beginning;
   }
 
 }
@@ -273,7 +284,7 @@ void cmd_constructor(char inChar) { //construct commands from byte-by-byte input
         cmd_input.value = tmp_string.toInt();
         tmp_string = "";
         char_counter = 1;
-        cmd_input.pending = true;
+        Serial.println(F("command created"));
         addCmdtoQ();
       }
       else {

@@ -19,6 +19,10 @@ void initfoo()
   programPtrs[2] = go_left;
   programPtrs[3] = go_right;
   programPtrs[4] = prgm_test;
+
+  for (int i = 0; i < CMD_BUFFER_SIZE; i++) {
+    cmd_q[i].obj_type = 0; // set all the commands to type = null so they don't trigger process_command needlessly
+  }
 }
 
 #endif

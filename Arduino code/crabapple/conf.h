@@ -4,7 +4,8 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-#define CMD_BUFFER_SIZE 8 // how many commands to hold in a Q.  more commands = more memory used. 
+const byte CMD_BUFFER_SIZE = 11; // how many commands to hold in a Q.  more commands = more memory used. 
+boolean bypassQ = 0; //set to true to enable command streaming without queing i.e. we will not wait for the last command to finish before executing a new command
 
 const char SERVO_CMD = 'S';
 const char MOTOR_CMD = 'M';

@@ -14,20 +14,19 @@ void check_timeouts() {
   }
 
   for (int i = 0; i < num_motors; i++) {
+    if (motor_obj[i].isLocked == true) {
     if ((millis() - motor_obj[i].lastMillis) > ((unsigned long) motor_obj[i].Timeout * 1000)) {
-      doMotor(i, 0, DO_CMD);
-      motor_obj[i].isLocked = false;
-      motor_obj[i].isActive = false;
+      doMotor(i, 1, RESET_CMD);
     }//if a motor timesout then it speed is set to 0 
+    }
   }
 
   for (int i = 0; i < num_lights; i++) {
-    if (light_obj[i].isActive == false  && light_obj[i].isLocked == true) {
+    if (light_obj[i].isLocked == true) {
       
       if ((millis() - light_obj[i].lastMillis) > ((unsigned long) light_obj[i].Timeout * 1000)) {
-        Serial.println(F("timeout light"));
-        doLight(i, light_obj[i].default_brightness, DO_CMD);
-        light_obj[i].isLocked = false;
+        Serial.println(F("timeout lightk"));
+        doLight(i, 1, RESET_CMD);
       }    
     }
   }
@@ -135,6 +134,7 @@ void hardwareWrite() {
       }
       analogWrite(motor_obj[i].speedPin, motor_obj[i].currentSpeed);
       motor_obj[i].lastMillis = millis();
+      motor_obj[i].isActive = false;
       motor_obj[i].isLocked = true; 
     }
   }

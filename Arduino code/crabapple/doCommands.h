@@ -68,10 +68,11 @@ void doProgram(int index, int value, char action) {
 
 void doLight(int index, int value, char action) {
 
-  if (action == DO_CMD) {
+  if (action == DO_CMD && light_obj[index].isLocked == false) {
     Serial.println(F("doing light..."));
     light_obj[index].brightness = value;
     light_obj[index].isActive = true;
+    light_obj[index].isLocked = true;
   }
 
   else if (action == QUERY_CMD) {
@@ -82,11 +83,27 @@ void doLight(int index, int value, char action) {
     light_obj[index].Timeout = value;
   }
 
+  else if (action == RESET_CMD) {
+    light_obj[index].brightness = light_obj[index].default_brightness;    
+    //now delete any commands for this object in the Q
+    //but skip this step if value = 0
+    if (value = 0) {
+    for (int i = 0; i < CMD_BUFFER_SIZE; i++) {
+      if (cmd_q[i].obj_type == LIGHT_CMD && cmd_q[i].obj_number == index) {
+        cmd_q[i].obj_type = 0;
+      }
+    }      
+    }
+
+    light_obj[index].isActive = true;    
+    light_obj[index].isLocked = false;
+  }
+
 }
 
 void doMotor(int index, int value, char action) {
 
-  if (action == DO_CMD) {
+  if (action == DO_CMD && motor_obj[index].isLocked == false) {
     if (value < 0) {
       motor_obj[index].Direction = 0; //go backwards
       value = value * -1;
@@ -121,6 +138,18 @@ void doMotor(int index, int value, char action) {
 
   else if (action == SETRATE_CMD) {
     motor_obj[index].rate = value;
+  }
+
+  else if (action == RESET_CMD) {
+    motor_obj[index].rate = 0;    
+    motor_obj[index].targetSpeed = 0;
+    //now delete any commands for this object in the Q
+    for (int i = 0; i < CMD_BUFFER_SIZE; i++) {
+      if (cmd_q[i].obj_type == MOTOR_CMD && cmd_q[i].obj_number == index) {
+        cmd_q[i].obj_type = 0;
+      }
+    }
+    motor_obj[index].isLocked = false;
   }
 
 }
@@ -171,15 +200,13 @@ void doServo(int index, int value, char action) {
 void process_command(int cmd_number) {
   Serial.println(F("processing cmd..."));
   if (cmd_q[cmd_number].obj_type == MOTOR_CMD) {
-    if (motor_obj[cmd_q[cmd_number].obj_number].isLocked == false || bypassQ) {
       int value = cmd_q[cmd_number].value;
       doMotor(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
       cmd_q[cmd_number].obj_type = 0;
-    }
   }
 
   else if (cmd_q[cmd_number].obj_type == SERVO_CMD) {
-    if (servo_obj[cmd_q[cmd_number].obj_number].isLocked == false || bypassQ) {
+    if (servo_obj[cmd_q[cmd_number].obj_number].isLocked == false) {
       int value = cmd_q[cmd_number].value;
       doServo(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
       cmd_q[cmd_number].obj_type = 0;
@@ -187,12 +214,14 @@ void process_command(int cmd_number) {
   }
 
   else if (cmd_q[cmd_number].obj_type == LIGHT_CMD) {
-    if (light_obj[cmd_q[cmd_number].obj_number].isLocked == false || bypassQ) {
-      int value = cmd_q[cmd_number].value;
-      doLight(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
-      cmd_q[cmd_number].obj_type = 0;
-      light_obj[cmd_q[cmd_number].obj_number].isLocked = true;
-    }
+      if (light_obj[cmd_q[cmd_number].obj_number].isLocked == true && cmd_q[cmd_number].action_type == DO_CMD) {
+      //don't run command if it can't run yet        
+      }
+      else {
+        cmd_q[cmd_number].obj_type = 0;
+        int value = cmd_q[cmd_number].value;
+        doLight(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+      }
   }
 
   else if (cmd_q[cmd_number].obj_type == BUTTON_CMD) {
@@ -202,7 +231,7 @@ void process_command(int cmd_number) {
   }
 
   else if (cmd_q[cmd_number].obj_type == BUZZER_CMD) {
-    if (buzzer_obj[cmd_q[cmd_number].obj_number].isLocked == false || bypassQ) {
+    if (buzzer_obj[cmd_q[cmd_number].obj_number].isLocked == false) {
       int value = cmd_q[cmd_number].value;
       doBuzzer(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
       cmd_q[cmd_number].obj_type = 0;
@@ -211,7 +240,7 @@ void process_command(int cmd_number) {
   }
 
   else if (cmd_q[cmd_number].obj_type == PROG_CMD) {
-    if (prgm_obj[cmd_q[cmd_number].obj_number].isLocked == false || bypassQ) {
+    if (prgm_obj[cmd_q[cmd_number].obj_number].isLocked == false) {
       int value = cmd_q[cmd_number].value;
       doProgram(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
       cmd_q[cmd_number].obj_type = 0;
@@ -265,7 +294,7 @@ void cmd_constructor(char inChar) { //construct commands from byte-by-byte input
       }
       break;
     case 2:
-      if (inChar == DO_CMD || inChar == QUERY_CMD || inChar == SETTIMEOUT_CMD || inChar == SETRATE_CMD) {
+      if (inChar == DO_CMD || inChar == QUERY_CMD || inChar == SETTIMEOUT_CMD || inChar == SETRATE_CMD || inChar == RESET_CMD) {
         cmd_input.obj_number = tmp_string.toInt();
         tmp_string = "";
         cmd_input.action_type = inChar;

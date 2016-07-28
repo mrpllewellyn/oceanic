@@ -5,7 +5,6 @@
 #include <Arduino.h>
 
 const byte CMD_BUFFER_SIZE = 11; // how many commands to hold in a Q.  more commands = more memory used. 
-boolean bypassQ = 0; //set to true to enable command streaming without queing i.e. we will not wait for the last command to finish before executing a new command
 
 const char SERVO_CMD = 'S';
 const char MOTOR_CMD = 'M';
@@ -18,6 +17,7 @@ const char QUERY_CMD = '?';
 const char DO_CMD = ':';
 const char SETTIMEOUT_CMD = 't';
 const char SETRATE_CMD = 'r';
+const char RESET_CMD = 'x';
 const char END_OF_CMD = '\n';
 
 const byte num_servos = 4;

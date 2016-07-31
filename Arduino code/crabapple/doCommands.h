@@ -15,7 +15,7 @@ byte q_counter;
 String tmp_string;
 
 
-void doButton(int index, int value, char action) {
+void doButton(byte index, int value, char action) {
 
   if (action == DO_CMD) {
     //nothing
@@ -31,7 +31,7 @@ void doButton(int index, int value, char action) {
 
 }
 
-void doBuzzer(int index, int value, char action) {
+void doBuzzer(byte index, int value, char action) {
 
   if (action == DO_CMD) {
     buzzer_obj[index].frequency = value;
@@ -48,7 +48,7 @@ void doBuzzer(int index, int value, char action) {
 
 }
 
-void doProgram(int index, int value, char action) {
+void doProgram(byte index, int value, char action) {
   
   if (action == DO_CMD) {
     if (index < num_programs){
@@ -66,7 +66,7 @@ void doProgram(int index, int value, char action) {
   }
 }
 
-void doLight(int index, int value, char action) {
+void doLight(byte index, int value, char action) {
 
   if (action == DO_CMD && light_obj[index].isLocked == false) {
     Serial.println(F("doing light..."));
@@ -88,11 +88,11 @@ void doLight(int index, int value, char action) {
     //now delete any commands for this object in the Q
 
     if (value != 1) {
-    for (int i = 0; i < CMD_BUFFER_SIZE; i++) {
-      if (cmd_q[i].obj_type == LIGHT_CMD && cmd_q[i].obj_number == index) {
-        cmd_q[i].obj_type = 0;
-      }
-    }      
+      for (byte i = 0; i < CMD_BUFFER_SIZE; i++) {
+        if (cmd_q[i].obj_type == LIGHT_CMD && cmd_q[i].obj_number == index) {
+          cmd_q[i].obj_type = 0;
+        }
+      }      
     }
 
     light_obj[index].doMe = true;    
@@ -101,7 +101,7 @@ void doLight(int index, int value, char action) {
 
 }
 
-void doMotor(int index, int value, char action) {
+void doMotor(byte index, int value, char action) {
 
   if (action == DO_CMD && motor_obj[index].isLocked == false) {
     if (value < 0) {
@@ -145,7 +145,7 @@ void doMotor(int index, int value, char action) {
     //now delete any commands for this object in the Q
     //but skip this step if value != 1
     if (value != 1) {
-    for (int i = 0; i < CMD_BUFFER_SIZE; i++) {
+    for (byte i = 0; i < CMD_BUFFER_SIZE; i++) {
       if (cmd_q[i].obj_type == MOTOR_CMD && cmd_q[i].obj_number == index) {
         cmd_q[i].obj_type = 0;
       }
@@ -157,7 +157,7 @@ void doMotor(int index, int value, char action) {
 
 }
 
-void doServo(int index, int value, char action) {
+void doServo(byte index, int value, char action) {
 
   if (action == DO_CMD) {
     if (value <= servo_obj[index].Max && value >= servo_obj[index].Min) {
@@ -203,15 +203,13 @@ void doServo(int index, int value, char action) {
 void process_command(int cmd_number) {
   Serial.println(F("processing cmd..."));
   if (cmd_q[cmd_number].obj_type == MOTOR_CMD) {
-      int value = cmd_q[cmd_number].value;
-      doMotor(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+      doMotor(cmd_q[cmd_number].obj_number, cmd_q[cmd_number].value, cmd_q[cmd_number].action_type);
       cmd_q[cmd_number].obj_type = 0;
   }
 
   else if (cmd_q[cmd_number].obj_type == SERVO_CMD) {
     if (servo_obj[cmd_q[cmd_number].obj_number].isLocked == false) {
-      int value = cmd_q[cmd_number].value;
-      doServo(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+      doServo(cmd_q[cmd_number].obj_number, cmd_q[cmd_number].value, cmd_q[cmd_number].action_type);
       cmd_q[cmd_number].obj_type = 0;
     }
   }
@@ -227,15 +225,13 @@ void process_command(int cmd_number) {
   }
 
   else if (cmd_q[cmd_number].obj_type == BUTTON_CMD) {
-      int value = cmd_q[cmd_number].value;
-      doButton(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+      doButton(cmd_q[cmd_number].obj_number, cmd_q[cmd_number].value, cmd_q[cmd_number].action_type);
       cmd_q[cmd_number].obj_type = 0;
   }
 
   else if (cmd_q[cmd_number].obj_type == BUZZER_CMD) {
     if (buzzer_obj[cmd_q[cmd_number].obj_number].isLocked == false) {
-      int value = cmd_q[cmd_number].value;
-      doBuzzer(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+      doBuzzer(cmd_q[cmd_number].obj_number, cmd_q[cmd_number].value, cmd_q[cmd_number].action_type);
       cmd_q[cmd_number].obj_type = 0;
       buzzer_obj[cmd_q[cmd_number].obj_number].isLocked = true;
     }
@@ -243,8 +239,7 @@ void process_command(int cmd_number) {
 
   else if (cmd_q[cmd_number].obj_type == PROG_CMD) {
     if (prgm_obj[cmd_q[cmd_number].obj_number].isLocked == false) {
-      int value = cmd_q[cmd_number].value;
-      doProgram(cmd_q[cmd_number].obj_number, value, cmd_q[cmd_number].action_type);
+      doProgram(cmd_q[cmd_number].obj_number, cmd_q[cmd_number].value, cmd_q[cmd_number].action_type);
       cmd_q[cmd_number].obj_type = 0;
     }
   }
@@ -258,7 +253,7 @@ void process_command(int cmd_number) {
 
 
 void addCmdtoQ() { //add command to command Q
-  int used_slots = 0;
+  byte used_slots = 0;
   beginning:
   if (q_counter > (CMD_BUFFER_SIZE - 1)) {
     q_counter = 0;

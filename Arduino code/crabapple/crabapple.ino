@@ -11,21 +11,18 @@
 
 void setup()
 {
-  Serial.begin(9600); //we use serial for our comms
-  initfoo(); //attach and set servos to home position, declare custom programs
-  Serial.println("init complete");
+  initialise(); //attach and set servos to home position, declare custom programs
 }
 
 void serialEvent() {
-  while (Serial.available()) { //while serial is available and while command Q is not full
-    // get the new byte:
-    cmd_constructor((char)Serial.read()); //send each character of input to the command constructor. this creates valid commands than can be processed.
+  while (Serial.available()) { //while serial is available 
+    cmd_constructor((char)Serial.read()); //send each character of input to the command constructor. this creates valid commands that can then be processed.
   }
 }
 
 void loop()
 {
-  for (int i = 0; i < CMD_BUFFER_SIZE; i++) {
+  for (byte i = 0; i < CMD_BUFFER_SIZE; i++) {
     if (cmd_q[i].obj_type != 0) { //don't execute commands of type = null
       Serial.println(i);
       Serial.println(F("command processed"));

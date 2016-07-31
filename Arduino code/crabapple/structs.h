@@ -4,15 +4,6 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-//typedef enum obj_state {
-//  DONE,
-//  DO,
-//  DOING
-//};
-//extern uint8_t obj_state;
-
-
-
 struct cmd {
   char obj_type;
   byte obj_number;

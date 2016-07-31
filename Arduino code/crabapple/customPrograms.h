@@ -4,9 +4,6 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-//int progcounter; //counter to test program loops
-//int timebetweenloops;
-
 
 void go_forward(int i){ // prog0
   doMotor(0, 255, DO_CMD);
@@ -36,6 +33,15 @@ void prgm_test(int i){ //prog4
 //  }
 
 } 
+
+void load_programs() {
+programPtrs[0] = go_forward; //this declares the array of fucntion pointers
+programPtrs[1] = go_backward; //each one points to a custom function that can be called through external commands
+programPtrs[2] = go_left;     //the number of pointers declared should match num_programs in conf.h
+programPtrs[3] = go_right;
+programPtrs[4] = prgm_test;
+}
+
 
 
 #endif

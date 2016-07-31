@@ -5,7 +5,7 @@
 #include <Arduino.h>
 
 void check_timeouts() {
-  for (int i = 0; i < num_servos; i++) {
+  for (byte i = 0; i < num_servos; i++) {
     if ((millis() - servo_obj[i].lastMillis) > ((unsigned long) servo_obj[i].Timeout * 1000)) { //timeouts are stored in seconds so need to be multiplied by 1000 to make milliseconds
       doServo(i, servo_obj[i].Home, DO_CMD);                                                  //the timeout vars are temporalily 'cast' as unsigned long to accommodate the size
       servo_obj[i].isLocked = false;
@@ -13,7 +13,7 @@ void check_timeouts() {
     }//if a servo timesout then it returns to its home position
   }
 
-  for (int i = 0; i < num_motors; i++) {
+  for (byte i = 0; i < num_motors; i++) {
     if (motor_obj[i].isLocked == true) {
     if ((millis() - motor_obj[i].lastMillis) > ((unsigned long) motor_obj[i].Timeout * 1000)) {
       doMotor(i, 1, RESET_CMD);
@@ -21,7 +21,7 @@ void check_timeouts() {
     }
   }
 
-  for (int i = 0; i < num_lights; i++) {
+  for (byte i = 0; i < num_lights; i++) {
     if (light_obj[i].isLocked == true) {
       
       if ((millis() - light_obj[i].lastMillis) > ((unsigned long) light_obj[i].Timeout * 1000)) {
@@ -31,7 +31,7 @@ void check_timeouts() {
     }
   }
 
-  for (int i = 0; i < num_buzzers; i++) { //no need to time out buttons at the moment
+  for (byte i = 0; i < num_buzzers; i++) { //no need to time out buttons at the moment
     if (buzzer_obj[i].isLocked == true) {
       
     if ((millis() - buzzer_obj[i].lastMillis) > (unsigned long) buzzer_obj[i].duration) {
@@ -42,7 +42,7 @@ void check_timeouts() {
   }
 
 
-  for (int i = 0; i < num_programs; i++) {
+  for (byte i = 0; i < num_programs; i++) {
     if ((millis() - prgm_obj[i].lastMillis) > ((unsigned long) prgm_obj[i].Timeout * 1000)) {
       prgm_obj[i].doMe = false;
       prgm_obj[i].isLocked = false;      
@@ -51,7 +51,7 @@ void check_timeouts() {
 }
 
 void check_buttons() {
-  for (int i = 0; i < num_buttons; i++) { //no need to time out buttons at the moment
+  for (byte i = 0; i < num_buttons; i++) { //no need to time out buttons at the moment
     if (!(digitalRead(button_obj[i].Pin))){
       button_obj[i].doMe = true;
       Serial.print(F("button:"));
@@ -65,7 +65,7 @@ void check_buttons() {
 }
 
 void check_servo_positions() {
-  for (int i = 0; i < num_servos; i++) {
+  for (byte i = 0; i < num_servos; i++) {
     //servo_obj[i].currentPos = servo_[i].read();
     if (servo_obj[i].lastMillis < (millis() - (255 / servo_obj[i].rate))) {
       if (servo_obj[i].currentPos < servo_obj[i].targetPos) {
@@ -87,7 +87,7 @@ void check_servo_positions() {
 }
 
 void check_motor_speed() {
-  for (int i = 0; i < num_motors; i++) {
+  for (byte i = 0; i < num_motors; i++) {
     if (motor_obj[i].lastMillis < (millis() - (255 / motor_obj[i].rate))) {
       if (motor_obj[i].currentSpeed < motor_obj[i].targetSpeed) {
         motor_obj[i].currentSpeed++;
@@ -114,7 +114,7 @@ void hardwareWrite() {
 
 //we loop through objects of each type
 
-  for (int i = 0; i < num_servos; i++) {
+  for (byte i = 0; i < num_servos; i++) {
     if (servo_obj[i].doMe == true) {
       servo_[i].write(servo_obj[i].currentPos);
       servo_obj[i].lastMillis = millis();
@@ -122,7 +122,7 @@ void hardwareWrite() {
     }
   }
   
-  for (int i = 0; i < num_motors; i++) {
+  for (byte i = 0; i < num_motors; i++) {
     if (motor_obj[i].doMe == true) {
       if (motor_obj[i].Direction == 0) {
         digitalWrite(motor_obj[i].dirPin1, HIGH); //set direction anticlockwise
@@ -139,7 +139,7 @@ void hardwareWrite() {
     }
   }
   
-  for (int i = 0; i < num_lights; i++) {
+  for (byte i = 0; i < num_lights; i++) {
     if (light_obj[i].doMe == true) {
       analogWrite(light_obj[i].Pin, light_obj[i].brightness);
       light_obj[i].lastMillis = millis();
@@ -153,14 +153,14 @@ void hardwareWrite() {
 //      button_obj[i].isLocked = true;
 //    }  }
     
-  for (int i = 0; i < num_programs; i++) {
+  for (byte i = 0; i < num_programs; i++) {
     if (prgm_obj[i].doMe == true) {  
       (*programPtrs[i])(i); //calls the program at the index of `index` in the pointers array
       prgm_obj[i].isLocked = true; 
     }
   }
 
-  for (int i = 0; i < num_buzzers; i++) {
+  for (byte i = 0; i < num_buzzers; i++) {
     if (buzzer_obj[i].doMe == true) {  
       tone(buzzer_obj[i].Pin, buzzer_obj[i].frequency, buzzer_obj[i].duration);
       buzzer_obj[i].lastMillis = millis();

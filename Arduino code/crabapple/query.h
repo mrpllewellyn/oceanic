@@ -16,7 +16,52 @@
 //  }
 //}
 
-void query_button(int index) { //this is whats returned from a query request 
+void query_config() {
+  Serial.println(F("--- Objects ---"));
+  Serial.print(F("#servos:"));
+  Serial.println(num_servos);
+  Serial.print(F("#motors:"));
+  Serial.println(num_motors);
+  Serial.print(F("#lights:"));
+  Serial.println(num_lights);
+  Serial.print(F("#buzzers:"));
+  Serial.println(num_buzzers);
+  Serial.print(F("#buttons:"));
+  Serial.println(num_buttons);
+  Serial.print(F("#programs:"));
+  Serial.println(num_programs);
+  Serial.println(F("--- Identifiers ---"));
+  Serial.print(F("servo:"));
+  Serial.println(SERVO_CMD);
+  Serial.print(F("motor:"));
+  Serial.println(MOTOR_CMD);
+  Serial.print(F("light:"));
+  Serial.println(LIGHT_CMD);
+  Serial.print(F("buzzers:"));
+  Serial.println(BUZZER_CMD);
+  Serial.print(F("buttons:"));
+  Serial.println(BUTTON_CMD);
+  Serial.print(F("programs:"));
+  Serial.println(PROG_CMD);
+  Serial.println(F("--- Commands ---"));
+  Serial.print(F("query:"));
+  Serial.println(QUERY_CMD);
+  Serial.print(F("do:"));
+  Serial.println(DO_CMD);
+  Serial.print(F("set timeout:"));
+  Serial.println(SETTIMEOUT_CMD);
+  Serial.print(F("set rate:"));
+  Serial.println(SETRATE_CMD);
+  Serial.print(F("reset:"));
+  Serial.println(RESET_CMD);
+  Serial.print(F("command seperator:"));
+  Serial.println(END_OF_CMD);
+  Serial.print(F("command Q length:"));
+  Serial.println(CMD_BUFFER_SIZE);
+
+}
+
+void query_button(byte index) { //this is whats returned from a query request 
   Serial.print(F("button"));
   Serial.println(index);
   Serial.print(F("Description: "));
@@ -26,7 +71,7 @@ void query_button(int index) { //this is whats returned from a query request
   Serial.println();
 }
 
-void query_buzzer(int index) { //this is whats returned from a query request 
+void query_buzzer(byte index) { //this is whats returned from a query request 
   Serial.print(F("buzzer"));
   Serial.println(index);
   Serial.print(F("frequency: "));
@@ -38,7 +83,7 @@ void query_buzzer(int index) { //this is whats returned from a query request
   Serial.println();
 }
 
-void query_prog(int index) { //this is whats returned from a query request
+void query_prog(byte index) { //this is whats returned from a query request
   Serial.print(F("program"));
   Serial.println(index);
   Serial.print(F("Description: "));
@@ -50,7 +95,7 @@ void query_prog(int index) { //this is whats returned from a query request
   Serial.println();
 }
 
-void query_light(int index) { //this is whats returned from a query request
+void query_light(byte index) { //this is whats returned from a query request
   Serial.print(F("light"));
   Serial.println(index);
   Serial.print(F("Description: "));
@@ -66,7 +111,7 @@ void query_light(int index) { //this is whats returned from a query request
   Serial.println();
 }
 
-void query_motor(int index) { //this is whats returned from a query request
+void query_motor(byte index) { //this is whats returned from a query request
   Serial.print(F("motor"));
   Serial.println(index);
   Serial.print(F("Description: "));
@@ -88,7 +133,7 @@ void query_motor(int index) { //this is whats returned from a query request
   Serial.println();
 }
 
-void query_servo(int index) {
+void query_servo(byte index) {
   Serial.print(F("servo"));
   Serial.println(index);
   Serial.print(F("Description: "));
@@ -111,22 +156,22 @@ void query_servo(int index) {
 }
 
 void query_all() {
-  for (int i = 0; i < num_servos; i++) {
+  for (byte i = 0; i < num_servos; i++) {
     query_servo(i);
   }
-  for (int i = 0; i < num_motors; i++) {
+  for (byte i = 0; i < num_motors; i++) {
     query_motor(i);
   }
-  for (int i = 0; i < num_lights; i++) {
+  for (byte i = 0; i < num_lights; i++) {
     query_light(i);
   }
-  for (int i = 0; i < num_buttons; i++) {
+  for (byte i = 0; i < num_buttons; i++) {
     query_button(i);
   }
-  for (int i = 0; i < num_buzzers; i++) {
+  for (byte i = 0; i < num_buzzers; i++) {
     query_buzzer(i);
   }
-  for (int i = 0; i < num_programs; i++) {
+  for (byte i = 0; i < num_programs; i++) {
     query_prog(i);
   }
 }

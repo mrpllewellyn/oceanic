@@ -4,7 +4,7 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-const byte CMD_BUFFER_SIZE = 11; // how many commands to hold in a Q.  more commands = more memory used. 
+const byte CMD_BUFFER_SIZE = 16; // how many commands to hold in a Q.  more commands = more memory used. 
 
 const char SERVO_CMD = 'S';
 const char MOTOR_CMD = 'M';

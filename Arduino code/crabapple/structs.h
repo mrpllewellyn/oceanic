@@ -11,6 +11,11 @@ struct cmd {
   int value;
 };
 
+//struct aQ {
+//  char action_type;
+//  int value;
+//};
+
 struct servo { // struct for servo object type
   byte Pin;      // the number of the servo pin
   byte Min;     //servo min allowed position
@@ -24,7 +29,7 @@ struct servo { // struct for servo object type
   unsigned long lastMillis; //record of when unit was last run
   boolean doMe;
   boolean isRunning;
-  
+//  aQ Q[4];
 };
 
 struct motor {
@@ -42,6 +47,7 @@ struct motor {
   unsigned long lastMillis;
   boolean doMe;
   boolean isRunning;
+//  aQ Q[4];
 };
 
 struct light {
@@ -53,6 +59,7 @@ struct light {
   unsigned long lastMillis;
   boolean doMe;
   boolean isRunning;
+//  aQ Q[4];
 };
 
 struct button {
@@ -68,6 +75,7 @@ struct buzzer {
   unsigned long lastMillis;  
   boolean doMe;
   boolean isRunning;
+//  aQ Q[4];
 };
 
 struct prgm {
@@ -76,6 +84,7 @@ struct prgm {
   unsigned long lastMillis;
   boolean doMe;
   boolean isRunning;
+//  aQ Q[4];
 };
 
 

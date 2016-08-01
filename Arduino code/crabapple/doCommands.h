@@ -8,7 +8,6 @@
 cmd cmd_input;
 //create array of same structs for queuing/buffering commands
 cmd cmd_q[CMD_BUFFER_SIZE];
-
 //globals for command processing
 byte char_counter = 1; //command constructer counter;
 byte q_counter;

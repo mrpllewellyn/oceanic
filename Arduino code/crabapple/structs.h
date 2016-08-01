@@ -23,7 +23,7 @@ struct servo { // struct for servo object type
   byte targetPos;
   unsigned long lastMillis; //record of when unit was last run
   boolean doMe;
-  boolean isLocked;
+  boolean isRunning;
   
 };
 
@@ -41,7 +41,7 @@ struct motor {
   byte targetSpeed;
   unsigned long lastMillis;
   boolean doMe;
-  boolean isLocked;
+  boolean isRunning;
 };
 
 struct light {
@@ -52,7 +52,7 @@ struct light {
   byte brightness;
   unsigned long lastMillis;
   boolean doMe;
-  boolean isLocked;
+  boolean isRunning;
 };
 
 struct button {
@@ -67,7 +67,7 @@ struct buzzer {
   unsigned int duration;
   unsigned long lastMillis;  
   boolean doMe;
-  boolean isLocked;
+  boolean isRunning;
 };
 
 struct prgm {
@@ -75,7 +75,7 @@ struct prgm {
   String Desc;
   unsigned long lastMillis;
   boolean doMe;
-  boolean isLocked;
+  boolean isRunning;
 };
 
 

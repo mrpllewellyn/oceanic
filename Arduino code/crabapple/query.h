@@ -4,18 +4,6 @@
 // include types & constants of Wiring core API
 #include <Arduino.h>
 
-//void readState(enum obj_state state) {
-//  if (state == DO) {
-//    Serial.println(F("DO"));
-//  }
-//  else if (state == DOING) {
-//    Serial.println(F("DOING"));
-//  }
-//  else if (state == DONE) {
-//    Serial.println(F("DONE"));
-//  }
-//}
-
 void query_config() {
   Serial.println(F("--- Objects ---"));
   Serial.print(F("#servos:"));
@@ -54,11 +42,8 @@ void query_config() {
   Serial.println(SETRATE_CMD);
   Serial.print(F("reset:"));
   Serial.println(RESET_CMD);
-  Serial.print(F("command seperator:"));
-  Serial.println(END_OF_CMD);
   Serial.print(F("command Q length:"));
   Serial.println(CMD_BUFFER_SIZE);
-
 }
 
 void query_button(byte index) { //this is whats returned from a query request 
@@ -106,8 +91,8 @@ void query_light(byte index) { //this is whats returned from a query request
   Serial.println(light_obj[index].brightness);
   Serial.print(F("timeout (s): "));
   Serial.println(light_obj[index].Timeout);
-//  Serial.print(F("status: "));
-//  readState(light_obj[index].do_me);
+  Serial.print(F("locked: "));
+  Serial.println(light_obj[index].isRunning);  
   Serial.println();
 }
 

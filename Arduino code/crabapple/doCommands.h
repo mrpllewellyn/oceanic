@@ -68,11 +68,11 @@ void doProgram(byte index, int value, char action) {
 
 void doLight(byte index, int value, char action) {
 
-  if (action == DO_CMD && light_obj[index].isLocked == false) {
+  if (action == DO_CMD && light_obj[index].isRunning == false) {
     Serial.println(F("doing light..."));
     light_obj[index].brightness = value;
     light_obj[index].doMe = true;
-    light_obj[index].isLocked = true;
+    light_obj[index].isRunning = true;
   }
 
   else if (action == QUERY_CMD) {
@@ -96,14 +96,14 @@ void doLight(byte index, int value, char action) {
     }
 
     light_obj[index].doMe = true;    
-    light_obj[index].isLocked = false;
+    light_obj[index].isRunning = false;
   }
 
 }
 
 void doMotor(byte index, int value, char action) {
 
-  if (action == DO_CMD && motor_obj[index].isLocked == false) {
+  if (action == DO_CMD && motor_obj[index].isRunning == false) {
     if (value < 0) {
       motor_obj[index].Direction = 0; //go backwards
       value = value * -1;
@@ -152,7 +152,7 @@ void doMotor(byte index, int value, char action) {
     }
     }
     motor_obj[index].doMe = true;
-    motor_obj[index].isLocked = false;
+    motor_obj[index].isRunning = false;
   }
 
 }
@@ -162,17 +162,18 @@ void doServo(byte index, int value, char action) {
   if (action == DO_CMD) {
     if (value <= servo_obj[index].Max && value >= servo_obj[index].Min) {
       servo_obj[index].targetPos = value;
-      //servo_[index].write(servo_obj[index].Pos);
-      //servo_obj[index].do_me = true;
-    }
-    if (value == 0) {
-      servo_obj[index].targetPos = 0;
+      servo_obj[index].doMe = true;
+      servo_obj[index].isRunning = true;
     }
     else if (value < servo_obj[index].Min) {
       servo_obj[index].targetPos = servo_obj[index].Min;
+      servo_obj[index].doMe = true;
+      servo_obj[index].isRunning = true;
     }
     else if (value > servo_obj[index].Max) {
-      servo_obj[index].targetPos = servo_obj[index].Max;      
+      servo_obj[index].targetPos = servo_obj[index].Max;  
+      servo_obj[index].doMe = true;
+      servo_obj[index].isRunning = true;    
     }
   }
 
@@ -189,6 +190,30 @@ void doServo(byte index, int value, char action) {
     servo_obj[index].rate = value;
   }
 
+  else if (action == RESET_CMD) {
+    servo_obj[index].targetPos = servo_obj[index].Home;    
+    //now delete any commands for this object in the Q
+
+    if (value != 1) {
+      for (byte i = 0; i < CMD_BUFFER_SIZE; i++) {
+        if (cmd_q[i].obj_type == SERVO_CMD && cmd_q[i].obj_number == index) {
+          cmd_q[i].obj_type = 0;
+        }
+      }      
+    }
+
+    servo_obj[index].doMe = true;    
+    servo_obj[index].isRunning = false;
+  }
+
+}
+//
+void doReset() {
+  Serial.println(F("reset all not implemented"));
+//        doLight(i, 1, RESET_CMD);
+//        doServo(i, 1, RESET_CMD);
+//        doMotor(i, 1, RESET_CMD);
+//        doBuzzer(i, 1, RESET_CMD);
 }
 
 
@@ -208,16 +233,31 @@ void process_command(int cmd_number) {
   }
 
   else if (cmd_q[cmd_number].obj_type == SERVO_CMD) {
-    if (servo_obj[cmd_q[cmd_number].obj_number].isLocked == false) {
-      doServo(cmd_q[cmd_number].obj_number, cmd_q[cmd_number].value, cmd_q[cmd_number].action_type);
-      cmd_q[cmd_number].obj_type = 0;
-    }
+      if (servo_obj[cmd_q[cmd_number].obj_number].isRunning == true && cmd_q[cmd_number].action_type == DO_CMD) {
+      //don't run command if it can't run yet        
+      }
+//      else if (servo_obj[cmd_q[cmd_number].obj_number].isRunning == true && cmd_q[cmd_number].action_type == SETTIMEOUT_CMD) {
+//      //don't run command if it can't run yet        
+//      }
+//      else if (servo_obj[cmd_q[cmd_number].obj_number].isRunning == true && cmd_q[cmd_number].action_type == SETRATE_CMD) {
+//      //don't run command if it can't run yet        
+//      }
+      else {
+        cmd_q[cmd_number].obj_type = 0;
+        doServo(cmd_q[cmd_number].obj_number, cmd_q[cmd_number].value, cmd_q[cmd_number].action_type);
+      }
   }
 
   else if (cmd_q[cmd_number].obj_type == LIGHT_CMD) {
-      if (light_obj[cmd_q[cmd_number].obj_number].isLocked == true && cmd_q[cmd_number].action_type == DO_CMD) {
+      if (light_obj[cmd_q[cmd_number].obj_number].isRunning == true && cmd_q[cmd_number].action_type == DO_CMD) {
       //don't run command if it can't run yet        
       }
+//      else if (light_obj[cmd_q[cmd_number].obj_number].isRunning == true && cmd_q[cmd_number].action_type == SETTIMEOUT_CMD) {
+//      //don't run command if it can't run yet        
+//      }
+//      else if (light_obj[cmd_q[cmd_number].obj_number].isRunning == true && cmd_q[cmd_number].action_type == SETRATE_CMD) {
+//      //don't run command if it can't run yet        
+//      }
       else {
         cmd_q[cmd_number].obj_type = 0;
         doLight(cmd_q[cmd_number].obj_number, cmd_q[cmd_number].value, cmd_q[cmd_number].action_type);
@@ -230,15 +270,15 @@ void process_command(int cmd_number) {
   }
 
   else if (cmd_q[cmd_number].obj_type == BUZZER_CMD) {
-    if (buzzer_obj[cmd_q[cmd_number].obj_number].isLocked == false) {
+    if (buzzer_obj[cmd_q[cmd_number].obj_number].isRunning == false) {
       doBuzzer(cmd_q[cmd_number].obj_number, cmd_q[cmd_number].value, cmd_q[cmd_number].action_type);
       cmd_q[cmd_number].obj_type = 0;
-      buzzer_obj[cmd_q[cmd_number].obj_number].isLocked = true;
+      buzzer_obj[cmd_q[cmd_number].obj_number].isRunning = true;
     }
   }
 
   else if (cmd_q[cmd_number].obj_type == PROG_CMD) {
-    if (prgm_obj[cmd_q[cmd_number].obj_number].isLocked == false) {
+    if (prgm_obj[cmd_q[cmd_number].obj_number].isRunning == false) {
       doProgram(cmd_q[cmd_number].obj_number, cmd_q[cmd_number].value, cmd_q[cmd_number].action_type);
       cmd_q[cmd_number].obj_type = 0;
     }
@@ -284,6 +324,10 @@ void cmd_constructor(char inChar) { //construct commands from byte-by-byte input
       char_counter++;
       if (inChar == QUERY_CMD) {
         query_all();
+        char_counter = 1;
+      }
+      if (inChar == RESET_CMD) {
+        doReset();
         char_counter = 1;
       }
       if (inChar == END_OF_CMD) {

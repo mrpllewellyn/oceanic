@@ -5,24 +5,25 @@
 #include <Arduino.h>
 
 void check_timeouts() {
+  
   for (byte i = 0; i < num_servos; i++) {
-    if ((millis() - servo_obj[i].lastMillis) > ((unsigned long) servo_obj[i].Timeout * 1000)) { //timeouts are stored in seconds so need to be multiplied by 1000 to make milliseconds
-      doServo(i, servo_obj[i].Home, DO_CMD);                                                  //the timeout vars are temporalily 'cast' as unsigned long to accommodate the size
-      servo_obj[i].isLocked = false;
-      servo_obj[i].doMe = false;
-    }//if a servo timesout then it returns to its home position
+    if (servo_obj[i].isRunning == true) {
+      if ((millis() - servo_obj[i].lastMillis) > ((unsigned long) servo_obj[i].Timeout * 1000)) { //timeouts are stored in seconds so need to be multiplied by 1000 to make milliseconds
+        doServo(i, 1, RESET_CMD);
+      }//if a servo timesout then it returns to its home position
+    }
   }
-
+  
   for (byte i = 0; i < num_motors; i++) {
-    if (motor_obj[i].isLocked == true) {
-    if ((millis() - motor_obj[i].lastMillis) > ((unsigned long) motor_obj[i].Timeout * 1000)) {
-      doMotor(i, 1, RESET_CMD);
-    }//if a motor timesout then it speed is set to 0 
+    if (motor_obj[i].isRunning == true) {
+      if ((millis() - motor_obj[i].lastMillis) > ((unsigned long) motor_obj[i].Timeout * 1000)) {
+        doMotor(i, 1, RESET_CMD);
+      }//if a motor timesout then it speed is set to 0 
     }
   }
 
   for (byte i = 0; i < num_lights; i++) {
-    if (light_obj[i].isLocked == true) {
+    if (light_obj[i].isRunning == true) {
       
       if ((millis() - light_obj[i].lastMillis) > ((unsigned long) light_obj[i].Timeout * 1000)) {
         Serial.println(F("timeout lightk"));
@@ -32,10 +33,10 @@ void check_timeouts() {
   }
 
   for (byte i = 0; i < num_buzzers; i++) { //no need to time out buttons at the moment
-    if (buzzer_obj[i].isLocked == true) {
+    if (buzzer_obj[i].isRunning == true) {
       
     if ((millis() - buzzer_obj[i].lastMillis) > (unsigned long) buzzer_obj[i].duration) {
-      buzzer_obj[i].isLocked = false;
+      buzzer_obj[i].isRunning = false;
     }
 
     }
@@ -45,7 +46,7 @@ void check_timeouts() {
   for (byte i = 0; i < num_programs; i++) {
     if ((millis() - prgm_obj[i].lastMillis) > ((unsigned long) prgm_obj[i].Timeout * 1000)) {
       prgm_obj[i].doMe = false;
-      prgm_obj[i].isLocked = false;      
+      prgm_obj[i].isRunning = false;      
     } 
   } 
 }
@@ -67,23 +68,24 @@ void check_buttons() {
 void check_servo_positions() {
   for (byte i = 0; i < num_servos; i++) {
     //servo_obj[i].currentPos = servo_[i].read();
-    if (servo_obj[i].lastMillis < (millis() - (255 / servo_obj[i].rate))) {
-      if (servo_obj[i].currentPos < servo_obj[i].targetPos) {
-        servo_obj[i].currentPos++;
-        if (servo_obj[i].currentPos > servo_obj[i].Max) {
-          servo_obj[i].currentPos = servo_obj[i].Max;
+      if (servo_obj[i].lastMillis < (millis() - (255 / servo_obj[i].rate))) {
+        if (servo_obj[i].currentPos < servo_obj[i].targetPos) {
+          servo_obj[i].currentPos++;
+          if (servo_obj[i].currentPos > servo_obj[i].Max) {
+            servo_obj[i].currentPos = servo_obj[i].Max;
+          }
+          servo_obj[i].doMe = true;
         }
-        //servo_obj[i].doMe = true;
+        if (servo_obj[i].currentPos > servo_obj[i].targetPos) {
+          servo_obj[i].currentPos--;
+          if (servo_obj[i].currentPos < servo_obj[i].Min) {
+            servo_obj[i].currentPos =  servo_obj[i].Min;
+          }
+          servo_obj[i].doMe = true;
+        }     
       }
-      if (servo_obj[i].currentPos > servo_obj[i].targetPos) {
-        servo_obj[i].currentPos--;
-        if (servo_obj[i].currentPos < servo_obj[i].Min) {
-          servo_obj[i].currentPos =  servo_obj[i].Min;
-        }
-        //servo_obj[i].doMe = true;
-      }     
     }
-  }
+  
 }
 
 void check_motor_speed() {
@@ -118,7 +120,7 @@ void hardwareWrite() {
     if (servo_obj[i].doMe == true) {
       servo_[i].write(servo_obj[i].currentPos);
       servo_obj[i].lastMillis = millis();
-      servo_obj[i].isLocked = true; 
+      servo_obj[i].doMe = false; 
     }
   }
   
@@ -135,7 +137,7 @@ void hardwareWrite() {
       analogWrite(motor_obj[i].speedPin, motor_obj[i].currentSpeed);
       motor_obj[i].lastMillis = millis();
       motor_obj[i].doMe = false;
-      motor_obj[i].isLocked = true; 
+      motor_obj[i].isRunning = true; 
     }
   }
   
@@ -150,13 +152,13 @@ void hardwareWrite() {
 //  for (int i = 0; i < num_buttons; i++) {
 //    if (button_obj[i].doMe == true) {
 //      //doButton(i, 0, DO_CMD);
-//      button_obj[i].isLocked = true;
+//      button_obj[i].isRunning = true;
 //    }  }
     
   for (byte i = 0; i < num_programs; i++) {
     if (prgm_obj[i].doMe == true) {  
       (*programPtrs[i])(i); //calls the program at the index of `index` in the pointers array
-      prgm_obj[i].isLocked = true; 
+      prgm_obj[i].isRunning = true; 
     }
   }
 

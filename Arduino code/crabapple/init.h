@@ -15,6 +15,8 @@ void initialise()
   for (byte i = 0; i < num_servos; i++) {
     servo_[i].attach(servo_obj[i].Pin);
     servo_[i].write(servo_obj[i].Home);
+    servo_obj[i].targetPos = servo_obj[i].Home;
+    servo_obj[i].currentPos = servo_obj[i].Home;
   }
 
   load_programs();

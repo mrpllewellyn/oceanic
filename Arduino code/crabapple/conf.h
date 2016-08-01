@@ -14,7 +14,7 @@ const char BUZZER_CMD = 'z';
 const char PROG_CMD = 'P';
 
 const char QUERY_CMD = '?';
-const char DO_CMD = ':';
+const char DO_CMD = '^';
 const char SETTIMEOUT_CMD = 't';
 const char SETRATE_CMD = 'r';
 const char RESET_CMD = 'x';
